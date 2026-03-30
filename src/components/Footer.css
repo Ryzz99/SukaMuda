@@ -1,0 +1,54 @@
+/* Footer Section */
+.profile-footer {
+  background-color: #000;
+  color: #fff;
+  padding: 60px 20px;
+  margin-top: 100px;
+}
+
+.footer-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.footer-logo-circle {
+  width: 120px;
+  height: 120px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.footer-logo-circle img {
+  width: 120%;
+  height: auto;
+  object-fit: contain;
+}
+
+
+.footer-links h3, .footer-categories h3 {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.footer-links p, .cat-col p {
+  font-size: 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  color: #bbb;
+}
+
+.category-grid {
+  display: flex;
+  gap: 40px;
+}
+
+.footer-links p:hover, .cat-col p:hover {
+  color: #fff;
+}

@@ -1,0 +1,190 @@
+.navbar-container {
+  width: 100%;
+  font-family: Arial, sans-serif;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background-color: white;
+  position: relative;
+}
+
+.navbar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 5%;
+}
+
+.logo-circle {
+  width: 110px;
+  height: 110px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ccc;
+  overflow: hidden;
+  position: absolute;
+  left: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10001;
+}
+
+.logo-circle img {
+  width: 120%;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 25px;
+  padding: 8px 20px;
+  width: 450px;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+.search-bar:focus-within {
+  background-color: white;
+  border-color: #000;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  width: 480px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding-left: 12px;
+  font-size: 14px;
+  color: #333;
+  background: transparent;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-daftar {
+  background: black;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-masuk {
+  background: rgba(51, 51, 51, 0.13);
+  color: black;
+  padding: 8px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.navbar-bottom {
+  background-color: black;
+  padding: 10px 0;
+  position: relative;
+  z-index :1000;
+}
+
+.navbar-bottom::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0 5% 0 200px;
+  align-items: center;
+}
+
+.nav-item {
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #222;
+  list-style: none;
+  padding: 10px 0;
+  min-width: 150px;
+  border-radius: 0 0 5px 5px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+  z-index: 2000;
+}
+
+.dropdown-menu li {
+  padding: 10px 20px;
+  color: #ccc;
+  font-size: 14px;
+}
+
+.dropdown-menu li:hover {
+  background-color: #444;
+  color: white;
+}
+
+.arrow {
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+  transition: 0.3s;
+}
+
+.down { transform: rotate(45deg); }
+.up { transform: rotate(-135deg); }
+
+.logged-in-icons {
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: black
+}
+
+.logged-in-icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.icon {
+  color: black; /* Ikon putih agar terlihat di navbar hitam */
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.icon:hover {
+  color: black;
+}
+
+.profile-icon {
+  font-size: 32px; /* Ikon profil dibuat sedikit lebih besar */
+}

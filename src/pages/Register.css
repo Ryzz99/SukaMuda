@@ -1,0 +1,87 @@
+.register-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: #cccccc;
+  font-family: Arial, sans-serif;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  color: black;
+  background-color: white;
+  padding: 40px 40px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  border: 2px solid #6c7da1;
+}
+
+.back-button {
+  position: absolute;
+  top: 30px;
+  left: 100px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+.register-card h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.input-group {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+}
+
+.register-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.btn-masuk-reg {
+  background-color: #e0e0e0;
+  color: black;
+  border: none;
+  padding: 10px 35px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-daftar-reg {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 35px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}

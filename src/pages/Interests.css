@@ -1,0 +1,90 @@
+.interests-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+
+.interests-card {
+  width: 100%;
+  max-width: 600px; /* Lebih lebar sedikit agar tag muat samping */
+  background-color: #ffffff;
+  padding: 60px 40px;
+  border-radius: 40px; /* Sudut sangat tumpul sesuai gambar */
+  text-align: center;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.interests-card h2 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: #000000;
+}
+
+.interests-grid {
+  background-color: #e0e0e0; /* Background abu-abu di area tombol */
+  padding: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
+
+.interest-tag {
+  background: #ffffff; 
+  color: #000000;
+  border: 1px solid #333;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.interest-tag.active {
+  background-color: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+.interest-tag:hover {
+  background-color: #f0f0f0;
+}
+
+.interests-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  padding-right: 10%;
+}
+
+.btn-lewati {
+  background-color: #000000;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-selanjutnya {
+  background-color: #1e88e5; /* Warna biru sesuai gambar */
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

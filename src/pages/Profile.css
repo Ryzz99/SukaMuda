@@ -1,0 +1,65 @@
+.profile-page {
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+
+/* Banner & Info */
+.banner-gray {
+  height: 150px;
+  background-color: #d9d9d9;
+  width: 100%;
+}
+
+.profile-info-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 20px;
+  position: relative;
+}
+
+.user-details {
+  margin-top: 20px;
+}
+
+.user-details h1 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color:black
+}
+
+.bio-text { font-weight: bold; color: #555; }
+.sub-text { color: #777; margin: 2px 0; }
+
+.profile-avatar-large {
+  width: 180px;
+  height: 180px;
+  background-color: #000;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  margin-top: -90px; /* Membuat lingkaran naik ke banner */
+  z-index: 2;
+}
+
+/* Tabs */
+.profile-tabs {
+  max-width: 1000px;
+  margin: 40px auto 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid black;
+  color: black;
+  font-weight: bold;
+}
+
+.tab-item {
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.tab-item.active {
+  color: #d9d9d9;
+}
+

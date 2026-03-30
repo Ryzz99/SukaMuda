@@ -1,0 +1,121 @@
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: #cccccc;
+  font-family: Arial, sans-serif;
+}
+
+.back-button {
+  position: absolute;
+  top: 50px;
+  left: 100px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  color:#ffffff
+}
+
+.login-card h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.input-group {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #999;
+  border-radius: 10px;
+  font-size: 16px;
+  box-sizing: border-box;
+  color: white;
+  background-color: #ffffff; /* Mengubah kotak menjadi putih bersih */
+  color: #333333;
+}
+
+.input-group input::placeholder {
+  color: #ccc;
+  font-weight: bold;
+}
+
+.forgot-password {
+  font-size: 12px;
+  color: #333;
+  margin: 10px 0 30px 0;
+  cursor: pointer;
+}
+
+.login-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn-masuk-login {
+  background-color: #e0e0e0;
+  color: black;
+  border: none;
+  padding: 10px 40px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.btn-daftar-login {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 40px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 500px;      /* Sesuaikan lebar kotak */
+  text-align: center;
+  color: #333;
+  
+  /* --- Tambahan Kotak --- */
+  background-color: #f5f5f5; /* Warna background kotak sedikit abu sesuai gambar */
+  padding: 60px 40px;        /* Jarak isi dari tepi kotak */
+  border: 2px solid #6c7da1; /* Warna garis tepi kotak */
+  border-radius: 20px;       /* Membuat sudut tidak kotak (tumpul) */
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Bayangan halus */
+}
+
+/* Sesuaikan tombol back agar masuk ke dalam atau tetap di luar */
+.back-button {
+  position: absolute;
+  top: 20px;      
+  left: 20px;     
+  background: none; /* Hilangkan background gray agar hanya ikon panah */
+  font-size: 29px;
+  color: black;      /* Warna panah gelap sesuai gambar */
+  cursor: pointer;
+  border: none;
+}
