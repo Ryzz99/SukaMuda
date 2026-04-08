@@ -56,3 +56,36 @@ export const articles = [
     image: "/images/sport3.jpg"
   }
 ];
+
+
+// src/data/articles.js
+export const initialArticles = [
+  { 
+    id: 1, 
+    judul: "Tips Belajar React untuk Pemula", 
+    nama: "Insiyya Zakiyyatul", 
+    kategori: "Tech", 
+    isLiked: false, 
+    likes: 10, 
+    status: "published" 
+  },
+  { 
+    id: 2, 
+    judul: "Belajar Laravel 11 itu Seru", 
+    nama: "Admin SukaMuda", 
+    kategori: "Backend", 
+    isLiked: true, // Contoh yang sudah di-like
+    likes: 5, 
+    status: "published" 
+  },
+  { 
+    id: 3, 
+    judul: "Draft Artikel Saya", 
+    nama: "Insiyya Zakiyyatul", 
+    kategori: "Personal", 
+    isLiked: false, 
+    likes: 0, 
+    status: "draft",
+    tanggalEdit: "2 jam yang lalu"
+  },
+];

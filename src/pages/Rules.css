@@ -1,0 +1,88 @@
+.rules-container {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 50px 25px;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.7;
+  color: #000; /* Warna teks utama jadi hitam */
+  background-color: #fff; /* Background putih */
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  color: #000; /* Tombol back jadi hitam */
+  transition: transform 0.2s;
+}
+
+.back-button:hover {
+  transform: translateX(-5px);
+}
+
+.rules-main-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  color: #000; /* Judul hitam */
+}
+
+.rules-brand {
+  text-align: center;
+  font-size: 18px;
+  color: #000; /* Teks brand jadi hitam */
+  margin-bottom: 50px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  border-left: 5px solid #000;
+  padding-left: 15px;
+  margin: 40px 0 25px 0;
+  text-transform: uppercase;
+  color: #000; /* Section title hitam */
+}
+
+.rule-item {
+  margin-bottom: 25px;
+}
+
+.rule-item h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #000; /* Sub-judul item hitam */
+}
+
+.rule-item p {
+  margin-bottom: 10px;
+  text-align: justify;
+  color: #000; /* Paragraf hitam */
+}
+
+.rule-item ul {
+  padding-left: 20px;
+  list-style-type: disc;
+  color: #000; /* List bullet hitam */
+}
+
+.rule-item li {
+  margin-bottom: 5px;
+}
+
+.rules-divider {
+  margin: 50px 0;
+  border: 0;
+  border-top: 1px solid #000;
+}
+
+.penutup {
+  background-color: #fff;
+  color: #000;
+}

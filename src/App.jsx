@@ -10,6 +10,12 @@ import Register from './pages/Register';
 import Interests from './pages/interests';
 import Success from './pages/Success';
 import Profile from './pages/Profile';
+import Notifications from './pages/Notifications';
+import Write from './pages/Write';
+import WriteSuccess from './pages/WriteSuccess';
+import Rules from './pages/Rules';
+import Terms from './pages/Terms';
+import Help from './pages/Help'; // 2. Tambah import ini
 
 function App() {
   return (
@@ -25,9 +31,14 @@ function App() {
           <Route path="/interests" element={<Interests />} />
           <Route path="/success" element={<Success />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/write" element={<Write />} />
+          <Route path="/write-success" element={<WriteSuccess />} />
+          <Route path="/rules" element={<Rules />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/help" element={<Help />} /> {/* 3. Tambah route ini */}
         </Routes>
 
-        {/* 2. Tambah Footer di sini */}
         <Footer /> 
       </div>
     </AuthProvider>

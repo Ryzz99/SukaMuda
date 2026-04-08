@@ -1,0 +1,70 @@
+.about-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+  color: black;
+  line-height: 1.6;
+  background: white;
+}
+
+.about-main-title {
+  text-align: center;
+  font-size: 25px;
+  font-weight: 750;
+  margin-bottom: 40px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.about-section {
+  margin-bottom: 30px;
+  color : black;
+}
+
+.about-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: black;
+}
+
+.welcome-text {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  
+}
+
+.about-section ul {
+  padding-left: 25px;
+  list-style-type: disc;
+}
+
+.about-section li {
+  margin-bottom: 8px;
+  color: black;
+}
+
+.note {
+  font-style: italic;
+  font-size: 14px;
+  color: black;
+  margin-top: 15px;
+}
+
+.join-us {
+  background-color: black;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  
+}
+
+.tentang {
+  color: black;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}

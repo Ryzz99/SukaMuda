@@ -1,49 +1,59 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { IoLogoInstagram } from 'react-icons/io5';
 import './Footer.css';
 import logoSukaMuda from '../assets/logo.png';
 
-// 1. PASTIKAN NAMANYA "Footer" (F-nya besar)
 const Footer = () => { 
   return (
     <footer className="profile-footer">
       <div className="footer-content">
+        
+        {/* Bagian Kiri */}
         <div className="footer-logo-section">
           <div className="footer-logo-circle">
             <img src={logoSukaMuda} alt="SukaMuda" />
           </div>
-          <p>Follow us 📸</p>
+          <div className="social-follow">
+            <span>Follow us</span>
+            <a href="https://www.instagram.com/sukamudaid/" target="_blank" rel="noopener noreferrer">
+              <IoLogoInstagram className="instagram-icon" />
+            </a>
+          </div>
         </div>
 
+        {/* Bagian Tengah */}
         <div className="footer-links">
-          <h3>Tentang</h3>
-          <p>Syarat dan ketentuan</p>
-          <p>Privasi & Simbol</p>
-          <p>Iklan</p>
-          <p>Bantuan</p>
+          <Link to="/About">Tentang</Link>
+          <Link to="/Terms">Syarat dan ketentuan</Link>
+          <Link to="/Rules">Kebijakan Privasi & Kebijakan Penggunaan</Link>
+          <Link to="/iklan">Iklan</Link>
+          <Link to="/Help">Bantuan</Link>
         </div>
 
+        {/* Bagian Kanan */}
         <div className="footer-categories">
           <h3>Kategori</h3>
           <div className="category-grid">
             <div className="cat-col">
-              <p>News</p>
-              <p>Lifestyle</p>
-              <p>Sport & E-Sport</p>
-              <p>Music & Film</p>
-              <p>Hobby</p>
+              <Link to="/category/news">News</Link>
+              <Link to="/category/lifestyle">Lifestyle</Link>
+              <Link to="/category/sport">Sport & E-Sport</Link>
+              <Link to="/category/music">Music & Film</Link>
+              <Link to="/category/hobby">Hobby</Link>
             </div>
             <div className="cat-col">
-              <p>Otomotif</p>
-              <p>Health</p>
-              <p>Science</p>
-              <p>Device</p>
+              <Link to="/category/otomotif">Otomotif</Link>
+              <Link to="/category/health">Health</Link>
+              <Link to="/category/science">Science</Link>
+              <Link to="/category/device">Device</Link>
             </div>
           </div>
         </div>
+
       </div>
     </footer>
   );
 };
 
-// 2. PASTIKAN INI SAMA DENGAN NAMA DI ATAS
 export default Footer;
