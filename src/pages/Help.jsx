@@ -28,7 +28,7 @@ const Help = () => {
       return;
     }
 
-    console.log("Data dikirim ke Backend:", formData);
+    console.log("Data dikirim ke sistem:", formData);
     alert("Pesan terkirim! Tim Sukamuda akan menghubungi email Anda.");
   };
 

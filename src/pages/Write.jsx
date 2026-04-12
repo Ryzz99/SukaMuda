@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'; // Tambah useState
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import './Write.css';
+import { categories } from '../data/articles';
+import { saveArticle } from '../data/articlesStore';
 
 function Write() {
     const navigate = useNavigate();
@@ -10,6 +12,12 @@ function Write() {
     const quillRef = useRef(null);
 
     const [showModal, setShowModal] = useState(false);
+    const [title, setTitle] = useState("");
+    const [category, setCategory] = useState("");
+    const [teaser, setTeaser] = useState("");
+    const [tags, setTags] = useState("");
+    const [thumbnailPreview, setThumbnailPreview] = useState(null);
+    const [thumbnailData, setThumbnailData] = useState(null);
 
     useEffect(() => {
         if (!editorRef.current || quillRef.current) return;
@@ -34,8 +42,46 @@ function Write() {
 
     // 2. Fungsi Eksekusi Kirim
     const handleConfirmSubmit = () => {
+        const contentHtml = quillRef.current?.root?.innerHTML || "";
+        const trimmedTitle = title.trim();
+        const trimmedCategory = category.trim();
+
+        if (!trimmedTitle || !trimmedCategory || !thumbnailData) {
+            setShowModal(false);
+            return;
+        }
+
+        saveArticle({
+            id: Date.now(),
+            title: trimmedTitle,
+            category: trimmedCategory,
+            image: thumbnailData,
+            content: contentHtml,
+            teaser: teaser.trim(),
+            tags: tags
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean),
+            createdAt: new Date().toISOString()
+        });
+
         setShowModal(false);
         navigate("/write-success");
+    };
+
+    const handleThumbnailChange = (event) => {
+        const file = event.target.files?.[0];
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const result = typeof reader.result === "string" ? reader.result : null;
+            setThumbnailData(result);
+            setThumbnailPreview(result);
+        };
+        reader.readAsDataURL(file);
     };
 
     return (
@@ -52,25 +98,48 @@ function Write() {
 
                     <div className="form-row">
                         <label className="form-label">Category</label>
-                        <select className="form-select" defaultValue="">
+                        <select
+                            className="form-select"
+                            value={category}
+                            onChange={(event) => setCategory(event.target.value)}
+                        >
                             <option value="" disabled>Kategori</option>
-                            <option>News</option>
-                            <option>Lifestyle</option>
-                            <option>Sport</option>
-                            <option>E-Sport</option>
-                            <option>Music</option>
-                            <option>Film</option>
-                            <option>Hobby</option>
-                            <option>Otomotif</option>
-                            <option>Health</option>
-                            <option>Science</option>
-                            <option>Device</option>
+                            {categories.map((item) => (
+                                <option key={item.slug} value={item.slug}>
+                                    {item.label}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
                     <div className="form-row">
                         <label className="form-label">Title</label>
-                        <input className="form-input" placeholder="Write Here" />
+                        <input
+                            className="form-input"
+                            placeholder="Write Here"
+                            value={title}
+                            onChange={(event) => setTitle(event.target.value)}
+                        />
+                    </div>
+
+                    <div className="form-row">
+                        <label className="form-label">Thumbnail</label>
+                        <div className="thumbnail-input">
+                            <input
+                                className="form-input"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleThumbnailChange}
+                                required
+                            />
+                            {thumbnailPreview && (
+                                <img
+                                    className="thumbnail-preview"
+                                    src={thumbnailPreview}
+                                    alt="Preview"
+                                />
+                            )}
+                        </div>
                     </div>
 
                     <div className="editor-wrapper">
@@ -105,12 +174,22 @@ function Write() {
 
                     <div className="form-row">
                         <label className="form-label">Treaser</label>
-                        <input className="form-input" placeholder="Write Here" />
+                        <input
+                            className="form-input"
+                            placeholder="Write Here"
+                            value={teaser}
+                            onChange={(event) => setTeaser(event.target.value)}
+                        />
                     </div>
 
                     <div className="form-row">
                         <label className="form-label">Tag</label>
-                        <input className="form-input" placeholder="Write Here" />
+                        <input
+                            className="form-input"
+                            placeholder="Pisahkan dengan koma"
+                            value={tags}
+                            onChange={(event) => setTags(event.target.value)}
+                        />
                     </div>
 
                     <div className="form-actions">

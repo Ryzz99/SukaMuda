@@ -215,3 +215,18 @@
 .btn-lanjutkan span {
     font-size: 18px;
 }
+
+.thumbnail-input {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.thumbnail-preview {
+  width: 120px;
+  height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #e0e0e0;
+}

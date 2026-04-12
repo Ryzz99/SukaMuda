@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer'; // 1. Tambah import ini
 import Home from './pages/Home';
+import Category from './pages/Category';
 import About from './pages/About';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -16,6 +17,7 @@ import WriteSuccess from './pages/WriteSuccess';
 import Rules from './pages/Rules';
 import Terms from './pages/Terms';
 import Help from './pages/Help'; // 2. Tambah import ini
+import ArticleDetail from './pages/ArticleDetail';
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/category/:slug" element={<Category />} />
+          <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
