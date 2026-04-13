@@ -41,13 +41,6 @@ const Register = () => {
           </div>
 
           <div className="register-actions">
-            <button 
-              type="button" 
-              className="btn-masuk-reg" 
-              onClick={() => navigate('/login')}
-            >
-              Masuk
-            </button>
             {/* Tombol Daftar ini yang akan memicu onSubmit di atas */}
             <button type="submit" className="btn-daftar-reg">
               Daftar

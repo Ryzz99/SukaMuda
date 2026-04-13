@@ -6,7 +6,6 @@ import "./Category.css";
 
 const Category = () => {
   const { slug } = useParams();
-  const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(6);
 
   const group = useMemo(
@@ -23,16 +22,14 @@ const Category = () => {
 
   useEffect(() => {
     setVisibleCount(6);
-  }, [slug, query]);
+  }, [slug]);
 
   const filteredArticles = getAllArticles().filter((item) => {
     if (selectedSlugs.length === 0) {
       return false;
     }
 
-    const matchesCategory = selectedSlugs.includes(item.category);
-    const matchesQuery = item.title.toLowerCase().includes(query.trim().toLowerCase());
-    return matchesCategory && matchesQuery;
+    return selectedSlugs.includes(item.category);
   });
 
   const visibleArticles = filteredArticles.slice(0, visibleCount);
@@ -56,13 +53,6 @@ const Category = () => {
             </div>
           )}
         </div>
-        <input
-          className="category-search"
-          type="text"
-          placeholder="Cari artikel..."
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
       </header>
 
       {selectedSlugs.length === 0 && (

@@ -40,13 +40,32 @@
 .social-follow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px; /* sedikit diperlebar biar ga dempet */
   font-size: 14px;
 }
 
 .instagram-icon {
   font-size: 18px;
   color: #fff;
+  transition: 0.3s;
+}
+
+.instagram-icon:hover {
+  color: #e1306c; /* warna IG */
+  transform: scale(1.2);
+}
+
+/* TAMBAHAN TIKTOK */
+.tiktok-icon {
+  font-size: 18px;
+  color: #fff;
+  transition: 0.3s;
+}
+
+.tiktok-icon:hover {
+  color: #25f4ee; /* warna khas TikTok */
+  transform: scale(1.2);
+  text-shadow: 0 0 8px rgba(37, 244, 238, 0.7);
 }
 
 /* Menu Tengah & Kategori */
@@ -57,7 +76,7 @@
 }
 
 .footer-links {
-    margin-top: 15px; /* Menyesuaikan agar sejajar dengan tinggi logo */
+  margin-top: 15px; /* Menyesuaikan agar sejajar dengan tinggi logo */
 }
 
 .footer-links a, .cat-col a {

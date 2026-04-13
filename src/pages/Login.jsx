@@ -7,11 +7,11 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-const handleLogin = (e) => {
-  e.preventDefault();
-  login();
-  navigate('/');
-};
+  const handleLogin = (e) => {
+    e.preventDefault();
+    login();
+    navigate('/');
+  };
 
 return (
   <div className="login-container">
@@ -22,7 +22,7 @@ return (
 
         <h2>Welcome to SUKAMUDA</h2>
         
-        <form className="login-form">
+        <form className="login-form" onSubmit={handleLogin}>
           <div className="input-group">
             <label>Email</label>
             <input type="email" placeholder="Email" />

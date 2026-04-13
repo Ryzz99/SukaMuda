@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { IoLogoInstagram } from 'react-icons/io5';
+import { FaTiktok } from 'react-icons/fa'; // tambah ini
 import './Footer.css';
 import logoSukaMuda from '../assets/logo.png';
 
@@ -16,9 +17,23 @@ const Footer = () => {
           </div>
           <div className="social-follow">
             <span>Follow us</span>
-            <a href="https://www.instagram.com/sukamudaid/" target="_blank" rel="noopener noreferrer">
+
+            <a 
+              href="https://www.instagram.com/sukamudaid/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
               <IoLogoInstagram className="instagram-icon" />
             </a>
+
+            <a 
+              href="https://www.tiktok.com/@suka.muda?is_from_webapp=1&sender_device=pc" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <FaTiktok className="tiktok-icon" />
+            </a>
+
           </div>
         </div>
 

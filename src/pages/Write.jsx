@@ -40,7 +40,7 @@ function Write() {
         });
     }, []);
 
-    // 2. Fungsi Eksekusi Kirim
+    // 🔥 HANYA DIUBAH DI SINI
     const handleConfirmSubmit = () => {
         const contentHtml = quillRef.current?.root?.innerHTML || "";
         const trimmedTitle = title.trim();
@@ -48,6 +48,7 @@ function Write() {
 
         if (!trimmedTitle || !trimmedCategory || !thumbnailData) {
             setShowModal(false);
+            navigate("/write-success"); // ⬅️ tambahan
             return;
         }
 
@@ -194,7 +195,6 @@ function Write() {
 
                     <div className="form-actions">
                         <button className="btn-draft" type="button">Draft</button>
-                        {/* 3. Ubah onClick untuk memicu modal */}
                         <button
                             className="btn-submit"
                             type="button"
@@ -206,7 +206,6 @@ function Write() {
                 </section>
             </main>
 
-            {/* 4. MODAL CUSTOM */}
             {showModal && (
                 <div className="modal-overlay">
                     <div className="modal-container">
@@ -216,7 +215,7 @@ function Write() {
                             <button className="btn-batal" onClick={() => setShowModal(false)}>Batal</button>
                             <button
                                 className="btn-konfirmasi-hapus"
-                                style={{ backgroundColor: '#007bff' }} // Ganti warna jadi biru/hijau agar tidak seperti tombol hapus
+                                style={{ backgroundColor: '#007bff' }}
                                 onClick={handleConfirmSubmit}
                             >
                                 Kirim

@@ -7,12 +7,11 @@ import { getAllArticles } from "../data/articlesStore";
 const Interests = () => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState([]);
-  const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(6);
 
   useEffect(() => {
     setVisibleCount(6);
-  }, [selected, query]);
+  }, [selected]);
 
   const interestOptions = useMemo(
     () => categories.map((item) => ({ slug: item.slug, label: item.label })),
@@ -32,9 +31,7 @@ const Interests = () => {
       return false;
     }
 
-    const matchesCategory = selected.includes(item.category);
-    const matchesQuery = item.title.toLowerCase().includes(query.trim().toLowerCase());
-    return matchesCategory && matchesQuery;
+    return selected.includes(item.category);
   });
 
   const visibleArticles = filteredArticles.slice(0, visibleCount);
@@ -68,13 +65,6 @@ const Interests = () => {
       <div className="interests-results">
         <div className="results-header">
           <h3>Artikel sesuai minat</h3>
-          <input
-            className="interests-search"
-            type="text"
-            placeholder="Cari artikel..."
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
         </div>
 
         {selected.length === 0 && (
