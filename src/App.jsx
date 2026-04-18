@@ -1,14 +1,16 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
-import Footer from './components/Footer'; // 1. Tambah import ini
+import Footer from './components/Footer'; 
 import Home from './pages/Home';
 import Category from './pages/Category';
 import About from './pages/About';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Interests from './pages/interests';
+import VerifyOtp from './pages/VerifyOtp'; 
+import Interests from './pages/Interests'; 
 import Success from './pages/Success';
 import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
@@ -16,7 +18,7 @@ import Write from './pages/Write';
 import WriteSuccess from './pages/WriteSuccess';
 import Rules from './pages/Rules';
 import Terms from './pages/Terms';
-import Help from './pages/Help'; // 2. Tambah import ini
+import Help from './pages/Help'; 
 import ArticleDetail from './pages/ArticleDetail';
 
 function App() {
@@ -25,22 +27,23 @@ function App() {
       <div className="app-container">
         <Navbar /> 
 
-        <Routes>
+        <Routes> 
           <Route path="/" element={<Home />} />
           <Route path="/category/:slug" element={<Category />} />
           <Route path="/article/:id" element={<ArticleDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/verify-otp" element={<VerifyOtp />} /> 
           <Route path="/interests" element={<Interests />} />
           <Route path="/success" element={<Success />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/write" element={<Write />} />
-          <Route path="/write-success" element={<WriteSuccess />} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+          <Route path="/write" element={<ProtectedRoute><Write /></ProtectedRoute>} />
+          <Route path="/write-success" element={<ProtectedRoute><WriteSuccess /></ProtectedRoute>} />
           <Route path="/rules" element={<Rules />} />
           <Route path="/terms" element={<Terms />} />
-          <Route path="/help" element={<Help />} /> {/* 3. Tambah route ini */}
+          <Route path="/help" element={<Help />} />
         </Routes>
 
         <Footer /> 

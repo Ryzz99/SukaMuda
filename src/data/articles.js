@@ -1,6 +1,6 @@
 export const categories = [
   { slug: "osis", label: "Osis", group: "news" },
-  { slug: "kampus", label: "Kampus", group: "news" },
+  { slug: "college", label: "College", group: "news" },
   { slug: "general", label: "General", group: "news" },
   { slug: "style", label: "Style", group: "lifestyle" },
   { slug: "culinary", label: "Culinary", group: "lifestyle" },
@@ -42,13 +42,13 @@ export const articles = [
   {
     id: 3,
     title: "Kampus Gelar Expo Inovasi Mahasiswa 2026",
-    category: "kampus",
+    category: "college",
     image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=60"
   },
   {
     id: 4,
     title: "Beasiswa Riset untuk Mahasiswa Berprestasi",
-    category: "kampus",
+    category: "college",
     image: "https://images.unsplash.com/photo-1519452575417-564c1401ecc0?auto=format&fit=crop&w=900&q=60"
   },
   {
