@@ -230,3 +230,37 @@
   object-fit: cover;
   border: 1px solid #e0e0e0;
 }
+
+/* Container pembungkus link (Video & Audio) */
+.form-input-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white; /* Samakan dengan input lain */
+    border: 1px solid #ddd; /* Warna border default */
+    border-radius: 10px; /* Samakan lengkungannya */
+    padding: 0 16px; /* Padding samping yang normal */
+    height: 44px; /* Tinggi yang sama dengan .form-input */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Hilangkan border asli input di dalamnya agar tidak double */
+.form-input-no-border {
+    border: none !important;
+    background: transparent !important;
+    flex: 1;
+    height: 100%;
+    font-size: 16px;
+    outline: none;
+    color: black;
+    padding: 0; /* Nol-kan karena sudah ada padding di parent */
+}
+
+/* Ukuran Icon Rantai */
+.link-icon-svg {
+    width: 20px;
+    height: 20px;
+    color: #333;
+    flex-shrink: 0;
+}

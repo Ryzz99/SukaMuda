@@ -1,6 +1,6 @@
 export const categories = [
-  { slug: "osis", label: "Osis", group: "news" },
-  { slug: "kampus", label: "Kampus", group: "news" },
+  { slug: "school", label: "School", group: "news" },
+  { slug: "college", label: "College", group: "news" },
   { slug: "general", label: "General", group: "news" },
   { slug: "style", label: "Style", group: "lifestyle" },
   { slug: "culinary", label: "Culinary", group: "lifestyle" },
@@ -10,45 +10,45 @@ export const categories = [
   { slug: "otomotif", label: "Otomotif", group: "otomotif" },
   { slug: "science", label: "Science", group: "science" },
   { slug: "health", label: "Health", group: "health" },
-  { slug: "hobby", label: "Hobby", group: "hobby" },
-  { slug: "device", label: "Device", group: "device" }
+  { slug: "podcast", label: "Podcast", group: "podcast" },
+  { slug: "tech", label: "Tech", group: "tech" }
 ];
 
 export const categoryGroups = [
-  { slug: "news", label: "News", categorySlugs: ["osis", "kampus", "general"] },
+  { slug: "news", label: "News", categorySlugs: ["school", "college", "general"] },
   { slug: "lifestyle", label: "Lifestyle", categorySlugs: ["style", "culinary", "traveling"] },
   { slug: "sport", label: "Sport & E-Sport", categorySlugs: ["sport"] },
   { slug: "music", label: "Music & Film", categorySlugs: ["music"] },
   { slug: "otomotif", label: "Otomotif", categorySlugs: ["otomotif"] },
   { slug: "science", label: "Science", categorySlugs: ["science"] },
   { slug: "health", label: "Health", categorySlugs: ["health"] },
-  { slug: "hobby", label: "Hobby", categorySlugs: ["hobby"] },
-  { slug: "device", label: "Device", categorySlugs: ["device"] }
+  { slug: "podcast", label: "Podcast", categorySlugs: ["podcast"] },
+  { slug: "tech", label: "Tech", categorySlugs: ["tech"] }
 ];
 
 export const articles = [
   {
     id: 1,
     title: "Program OSIS Baru untuk Pengembangan Soft Skill",
-    category: "osis",
+    category: "school",
     image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=900&q=60"
   },
   {
     id: 2,
     title: "OSIS Kolaborasi dengan Komunitas Lokal",
-    category: "osis",
+    category: "school",
     image: "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?auto=format&fit=crop&w=900&q=60"
   },
   {
     id: 3,
     title: "Kampus Gelar Expo Inovasi Mahasiswa 2026",
-    category: "kampus",
+    category: "college",
     image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=60"
   },
   {
     id: 4,
     title: "Beasiswa Riset untuk Mahasiswa Berprestasi",
-    category: "kampus",
+    category: "college",
     image: "https://images.unsplash.com/photo-1519452575417-564c1401ecc0?auto=format&fit=crop&w=900&q=60"
   },
   {
@@ -263,25 +263,25 @@ export const articles = [
   {
     id: 23,
     title: "Hobi Fotografi untuk Pemula",
-    category: "hobby",
+    category: "podcast",
     image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=60"
   },
   {
     id: 24,
     title: "DIY Craft yang Bisa Dilakukan di Rumah",
-    category: "hobby",
+    category: "podcast",
     image: "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=900&q=60"
   },
   {
     id: 25,
     title: "Gadget Hemat Baterai untuk Mahasiswa",
-    category: "device",
+    category: "tech",
     image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=60"
   },
   {
     id: 26,
     title: "Review Laptop Ringkas untuk Kuliah",
-    category: "device",
+    category: "tech",
     image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=60"
   }
 ];
@@ -300,7 +300,7 @@ export const initialArticles = [
     id: 2,
     judul: "Belajar Laravel 11 itu Seru",
     nama: "Admin SukaMuda",
-    kategori: "Device",
+    kategori: "Tech",
     isLiked: true,
     likes: 5,
     status: "published"

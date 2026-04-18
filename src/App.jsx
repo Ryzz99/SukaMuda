@@ -18,6 +18,7 @@ import Rules from './pages/Rules';
 import Terms from './pages/Terms';
 import Help from './pages/Help'; // 2. Tambah import ini
 import ArticleDetail from './pages/ArticleDetail';
+import FAQ from './pages/FAQ'
 
 function App() {
   return (
@@ -40,7 +41,8 @@ function App() {
           <Route path="/write-success" element={<WriteSuccess />} />
           <Route path="/rules" element={<Rules />} />
           <Route path="/terms" element={<Terms />} />
-          <Route path="/help" element={<Help />} /> {/* 3. Tambah route ini */}
+          <Route path="/help" element={<Help />} />
+          <Route path="faq" element={<FAQ />} />
         </Routes>
 
         <Footer /> 

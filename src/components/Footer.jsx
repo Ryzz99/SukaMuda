@@ -44,6 +44,7 @@ const Footer = () => {
           <Link to="/Rules">Kebijakan Privasi & Kebijakan Penggunaan</Link>
           <Link to="/iklan">Iklan</Link>
           <Link to="/Help">Bantuan</Link>
+          <Link to="/faq">FAQ</Link>
         </div>
 
         {/* Bagian Kanan */}
@@ -55,13 +56,13 @@ const Footer = () => {
               <Link to="/category/lifestyle">Lifestyle</Link>
               <Link to="/category/sport">Sport & E-Sport</Link>
               <Link to="/category/music">Music & Film</Link>
-              <Link to="/category/hobby">Hobby</Link>
+              <Link to="/category/podcast">Podcast</Link>
             </div>
             <div className="cat-col">
               <Link to="/category/otomotif">Otomotif</Link>
               <Link to="/category/health">Health</Link>
               <Link to="/category/science">Science</Link>
-              <Link to="/category/device">Device</Link>
+              <Link to="/category/tech">Tech</Link>
             </div>
           </div>
         </div>

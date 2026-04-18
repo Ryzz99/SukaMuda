@@ -14,24 +14,30 @@ const Navbar = () => {
   
   const navigate = useNavigate();
   const sidebarRef = useRef();
+  const navMenuRef = useRef(); // Tambahan: Ref untuk area menu kategori
 
   // FUNGSI UNTUK BUKA/TUTUP DROPDOWN
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
   };
 
-  // Menutup sidebar jika klik di luar
+  // Menutup sidebar & dropdown jika klik di luar
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Menutup Sidebar jika klik di luar container sidebar
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
         setIsSidebarOpen(false);
       }
+      
+      // Menutup Dropdown Sub-Rubrik jika klik di luar area navbar-bottom
+      if (navMenuRef.current && !navMenuRef.current.contains(event.target)) {
+        setActiveDropdown(null);
+      }
     };
-    if (isSidebarOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+
+    document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isSidebarOpen]);
+  }, []);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -76,7 +82,7 @@ const Navbar = () => {
         </div>
 
         {/* --- NAVBAR BAWAH (Menu Kategori & Dropdown) --- */}
-        <div className="navbar-bottom">
+        <div className="navbar-bottom" ref={navMenuRef}> {/* Tambahan: ref dipasang di sini */}
           <ul className="nav-menu">
             {/* ITEM MENU: NEWS */}
             <li className="nav-item">
@@ -85,8 +91,8 @@ const Navbar = () => {
               </div>
               {activeDropdown === 'news' && (
                 <ul className="dropdown-menu">
-                  <li onClick={() => navigate('/category/osis')}>Osis</li>
-                  <li onClick={() => navigate('/category/kampus')}>Kampus</li>
+                  <li onClick={() => navigate('/category/school')}>School</li>
+                  <li onClick={() => navigate('/category/college')}>College</li>
                   <li onClick={() => navigate('/category/general')}>General</li>
                 </ul>
               )}
@@ -111,8 +117,8 @@ const Navbar = () => {
             <li className="nav-item" onClick={() => navigate('/category/otomotif')}>Otomotif</li>
             <li className="nav-item" onClick={() => navigate('/category/science')}>Science</li>
             <li className="nav-item" onClick={() => navigate('/category/health')}>Health</li>
-            <li className="nav-item" onClick={() => navigate('/category/hobby')}>Hobby</li>
-            <li className="nav-item" onClick={() => navigate('/category/device')}>Device</li>
+            <li className="nav-item" onClick={() => navigate('/category/tech')}>Tech</li>
+            <li className="nav-item" onClick={() => navigate('/category/podcast')}>Podcast</li>
           </ul>
         </div>
       </nav>
