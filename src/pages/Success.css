@@ -1,73 +1,519 @@
-.success-container {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0;
-  font-family: Arial, sans-serif;
+/* ============================================
+   Success.css — Welcome Page (God Level)
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.success-card {
-  width: 100%;
-  max-width: 650px;
-  background-color: #ffffff;
-  padding: 60px 50px;
-  border-radius: 50px; /* Sudut sangat bulat sesuai gambar */
-  text-align: center;
-  box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.05);
+.welcome-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-.success-card h2 {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  color: #000;
+/* ============================================
+   CONFETTI
+   ============================================ */
+.confetti-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden;
 }
 
-.welcome-text {
-  font-size: 20px;
-  line-height: 1.4;
-  color: #333;
-  margin-bottom: 40px;
-  padding: 0 20px;
+.confetti-piece {
+    position: absolute;
+    top: -10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    opacity: 0;
+    animation: confettiFall linear forwards;
 }
 
-/* --- Styling Ikon Centang --- */
-.check-icon-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 40px;
+.confetti-0 { background: #111111; }
+.confetti-1 { background: #444444; border-radius: 50%; }
+.confetti-2 { background: #888888; width: 6px; height: 12px; border-radius: 3px; }
+.confetti-3 { background: #cccccc; border-radius: 50%; width: 6px; height: 6px; }
+.confetti-4 { background: #111111; width: 5px; height: 14px; border-radius: 3px; }
+.confetti-5 { background: #555555; border-radius: 50%; width: 7px; height: 7px; }
+
+@keyframes confettiFall {
+    0% {
+        opacity: 0;
+        transform: translateY(0) rotate(0deg) scale(0.5);
+    }
+    10% {
+        opacity: 0.9;
+        transform: translateY(40px) rotate(90deg) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg) scale(0.3);
+    }
 }
 
-.check-circle {
-  width: 120px;
-  height: 120px;
-  background-color: #000;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* ============================================
+   DECORATIVE
+   ============================================ */
+.welcome-deco {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
 }
 
-.check-mark {
-  color: white;
-  font-size: 50px;
-  transform: rotate(45deg) scaleX(-1); /* Membuat huruf L jadi centang */
-  font-family: sans-serif;
-  margin-bottom: 15px;
+.welcome-deco-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0,0,0,0.012) 0%, transparent 60%);
+    top: -200px;
+    right: -200px;
+    animation: decoFloat 10s ease-in-out infinite;
 }
 
-/* --- Tombol Biru --- */
-.btn-final-selanjutnya {
-  background-color: #1e88e5;
-  color: white;
-  border: none;
-  padding: 10px 30px;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 15px;
+.welcome-deco-2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0,0,0,0.008) 0%, transparent 60%);
+    bottom: -100px;
+    left: -100px;
+    animation: decoFloat 14s ease-in-out infinite reverse;
+}
+
+.welcome-deco-3 {
+    width: 200px;
+    height: 200px;
+    border: 1px solid rgba(0,0,0,0.025);
+    top: 15%;
+    left: 6%;
+    animation: decoFloat 16s ease-in-out infinite;
+}
+
+@keyframes decoFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(15px, -20px) rotate(5deg); }
+}
+
+/* ============================================
+   CARD
+   ============================================ */
+.welcome-card {
+    width: 100%;
+    max-width: 520px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 28px;
+    padding: 48px 40px 40px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.03),
+        0 4px 16px rgba(0, 0, 0, 0.025),
+        0 16px 48px rgba(0, 0, 0, 0.04);
+    animation: cardEnter 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardEnter {
+    0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+        filter: blur(6px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+/* ============================================
+   CHECKMARK
+   ============================================ */
+.check-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+    animation: checkAppear 0.6s 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes checkAppear {
+    0% { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.check-ring {
+    position: relative;
+    z-index: 2;
+}
+
+.check-svg {
+    width: 88px;
+    height: 88px;
+    display: block;
+}
+
+.check-circle-bg {
+    stroke: rgba(0, 0, 0, 0.04);
+    stroke-width: 1.5;
+}
+
+.check-circle-stroke {
+    stroke: #111111;
+    stroke-width: 1.5;
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-linecap: round;
+    animation: drawCircle 0.7s 0.5s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    transform-origin: center;
+}
+
+@keyframes drawCircle {
+    0% { stroke-dashoffset: 166; }
+    100% { stroke-dashoffset: 0; }
+}
+
+.check-path {
+    stroke: #111111;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: drawCheck 0.4s 1s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+@keyframes drawCheck {
+    0% { stroke-dashoffset: 48; }
+    100% { stroke-dashoffset: 0; }
+}
+
+.check-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.06);
+    filter: blur(20px);
+    transform: translate(-50%, -50%) scale(0);
+    animation: glowPulse 0.6s 1.1s ease-out forwards;
+    z-index: 1;
+}
+
+@keyframes glowPulse {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+/* ============================================
+   BADGE
+   ============================================ */
+.welcome-badge {
+    margin-bottom: 18px;
+    animation: fadeUp 0.5s 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.welcome-badge span {
+    display: inline-block;
+    padding: 5px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #111111;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 100px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(12px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   TITLE
+   ============================================ */
+.welcome-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: #111111;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    animation: fadeUp 0.5s 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.brand-name {
+    display: inline-block;
+    background: linear-gradient(135deg, #111111 0%, #333333 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+}
+
+/* ============================================
+   DESCRIPTION
+   ============================================ */
+.welcome-desc {
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: #666666;
+    font-weight: 400;
+    margin-bottom: 28px;
+    animation: fadeUp 0.5s 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ============================================
+   FEATURE PILLS
+   ============================================ */
+.feature-pills {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.feature-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 100px;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    font-size: 12px;
+    font-weight: 500;
+    color: #555555;
+    transition: all 0.3s ease;
+}
+
+.feature-pill:hover {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.feature-pill svg {
+    opacity: 0.5;
+}
+
+/* ============================================
+   CTA BUTTON
+   ============================================ */
+.btn-explore {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 15px 28px;
+    background-color: #111111;
+    color: #ffffff;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s 1.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.btn-explore::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-explore:hover::before {
+    left: 100%;
+}
+
+.btn-explore:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.2),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-explore:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-explore svg {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-explore:hover svg {
+    transform: translateX(4px);
+}
+
+/* ============================================
+   FOOTER TEXT
+   ============================================ */
+.welcome-footer {
+    margin-top: 20px;
+    font-size: 11.5px;
+    color: #cccccc;
+    font-weight: 400;
+    animation: fadeUp 0.5s 1.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ============================================
+   RESPONSIVE — Tablet
+   ============================================ */
+@media (max-width: 600px) {
+    .welcome-page {
+        padding: 24px 16px;
+        align-items: flex-start;
+        padding-top: 40px;
+    }
+
+    .welcome-card {
+        padding: 36px 24px 32px;
+        border-radius: 22px;
+    }
+
+    .check-svg {
+        width: 72px;
+        height: 72px;
+    }
+
+    .check-glow {
+        width: 50px;
+        height: 50px;
+    }
+
+    .welcome-title {
+        font-size: 24px;
+    }
+
+    .welcome-desc {
+        font-size: 13.5px;
+        margin-bottom: 24px;
+    }
+
+    .feature-pills {
+        gap: 6px;
+    }
+
+    .feature-pill {
+        padding: 6px 11px;
+        font-size: 11px;
+    }
+
+    .btn-explore {
+        padding: 14px 24px;
+        font-size: 14px;
+        border-radius: 12px;
+    }
+
+    .welcome-deco-1,
+    .welcome-deco-2,
+    .welcome-deco-3 {
+        display: none;
+    }
+
+    .confetti-piece {
+        width: 6px;
+        height: 6px;
+    }
+
+    .confetti-2,
+    .confetti-4 {
+        height: 10px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE — Small
+   ============================================ */
+@media (max-width: 380px) {
+    .welcome-title {
+        font-size: 22px;
+    }
+
+    .welcome-desc {
+        font-size: 13px;
+    }
+
+    .feature-pills {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY — Reduced Motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .check-circle-stroke,
+    .check-path {
+        stroke-dashoffset: 0 !important;
+        animation: none !important;
+    }
+
+    .confetti-piece {
+        display: none !important;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY — Focus
+   ============================================ */
+.btn-explore:focus-visible {
+    outline: 2px solid #111111;
+    outline-offset: 3px;
+}
+
+.btn-explore:focus-visible {
+    outline-color: #ffffff;
+    outline-offset: -2px;
+    box-shadow: 0 0 0 3px #111111;
+}
+
+.feature-pill:focus-visible {
+    outline: 2px solid #111111;
+    outline-offset: 2px;
 }

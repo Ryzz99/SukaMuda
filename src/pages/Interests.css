@@ -1,142 +1,410 @@
-.interests-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 32px;
-  padding: 40px 20px 80px;
-  background-color: #f0f0f0;
-  font-family: Arial, sans-serif;
+/* ============================================
+   Interests.css
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+.interests-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 32px 20px;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Decorative ---- */
+.deco-blob {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(90px);
+}
+
+.deco-blob-1 {
+    width: 500px;
+    height: 500px;
+    background: rgba(0, 0, 0, 0.018);
+    top: -180px;
+    right: -120px;
+    animation: blobFloat 14s ease-in-out infinite;
+}
+
+.deco-blob-2 {
+    width: 400px;
+    height: 400px;
+    background: rgba(0, 0, 0, 0.012);
+    bottom: -120px;
+    left: -80px;
+    animation: blobFloat 18s ease-in-out infinite reverse;
+}
+
+@keyframes blobFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(20px, -25px) scale(1.04); }
+}
+
+/* ============================================
+   CARD
+   ============================================ */
 .interests-card {
-  width: 100%;
-  max-width: 600px; /* Lebih lebar sedikit agar tag muat samping */
-  background-color: #ffffff;
-  padding: 60px 40px;
-  border-radius: 40px; /* Sudut sangat tumpul sesuai gambar */
-  text-align: center;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 540px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 24px;
+    padding: 44px 36px 32px;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 4px 16px rgba(0, 0, 0, 0.03),
+        0 16px 48px rgba(0, 0, 0, 0.04);
+    position: relative;
+    z-index: 1;
+    animation: cardEntry 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.interests-card h2 {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 40px;
-  color: #000000;
+@keyframes cardEntry {
+    0% {
+        opacity: 0;
+        transform: translateY(36px) scale(0.97);
+        filter: blur(4px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
 }
 
-.interests-grid {
-  background-color: #e0e0e0; /* Background abu-abu di area tombol */
-  padding: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-  border-radius: 10px;
-  margin-bottom: 40px;
+/* ---- Header ---- */
+.card-header {
+    text-align: center;
+    margin-bottom: 32px;
 }
 
-.interest-tag {
-  background: #ffffff; 
-  color: #000000;
-  border: 1px solid #333;
-  padding: 8px 15px;
-  border-radius: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 14px;
-  transition: 0.2s;
+.card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: #111111;
+    color: #ffffff;
+    margin-bottom: 18px;
 }
 
-.interest-tag.active {
-  background-color: #000000;
-  color: #ffffff;
-  border-color: #000000;
+.card-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #111111;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 8px;
 }
 
-.interest-tag:hover {
-  background-color: #f0f0f0;
+.card-subtitle {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #888888;
+    font-weight: 400;
+    max-width: 360px;
+    margin: 0 auto;
 }
 
-.interests-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  padding-right: 10%;
+/* ---- Tags Grid ---- */
+.tags-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 8px;
 }
 
-.btn-lewati {
-  background-color: #000000;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
+.tag-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 15px;
+    border-radius: 100px;
+    border: 1.5px solid rgba(0, 0, 0, 0.09);
+    background: #ffffff;
+    color: #333333;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: tagIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.btn-selanjutnya {
-  background-color: #1e88e5; /* Warna biru sesuai gambar */
-  color: white;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+@keyframes tagIn {
+    0% { opacity: 0; transform: scale(0.88) translateY(6px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.interests-results {
-  width: 100%;
-  max-width: 1200px;
+.tag-btn:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.015);
+    transform: translateY(-1px);
 }
 
-.results-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 20px;
+.tag-btn:active {
+    transform: scale(0.95);
 }
 
-.results-header h3 {
-  margin: 0;
-  color: #000;
+/* ---- Tag Icon Circle ---- */
+.tag-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.05);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
 }
 
-.interests-search {
-  min-width: 220px;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+.tag-btn:hover .tag-icon {
+    background: rgba(0, 0, 0, 0.08);
 }
 
-.results-empty {
-  color: #666;
-  margin-top: 12px;
+/* ---- Active Tag ---- */
+.tag-active {
+    background: #111111 !important;
+    color: #ffffff !important;
+    border-color: #111111 !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
 }
 
-.results-actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 24px;
+.tag-active:hover {
+    background: #1a1a1a !important;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.18);
 }
 
-.btn-load-more {
-  background: #1e88e5;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
+.tag-active .tag-icon {
+    background: rgba(255, 255, 255, 0.18) !important;
 }
 
-.btn-load-more:hover {
-  background: #1565c0;
+/* ---- Selected Count ---- */
+.selected-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 20px 0 28px;
+    font-size: 12.5px;
+    color: #999999;
+    font-weight: 500;
+    animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(6px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.count-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #111111;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.75); }
+}
+
+/* ---- Actions ---- */
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.btn-skip {
+    padding: 11px 22px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    background: transparent;
+    color: #555555;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-skip:hover {
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #111111;
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.btn-next {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 24px;
+    border-radius: 12px;
+    border: none;
+    background: rgba(0, 0, 0, 0.05);
+    color: #aaaaaa;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: not-allowed;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-next-active {
+    background: #111111 !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+}
+
+.btn-next-active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    background: #1a1a1a !important;
+}
+
+.btn-next-active:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.btn-next-active svg {
+    transition: transform 0.25s ease;
+}
+
+.btn-next-active:hover svg {
+    transform: translateX(3px);
+}
+
+/* ============================================
+   RESPONSIVE — Tablet
+   ============================================ */
+@media (max-width: 600px) {
+    .interests-page {
+        padding: 24px 16px;
+        align-items: flex-start;
+        padding-top: 48px;
+    }
+
+    .interests-card {
+        padding: 32px 22px 26px;
+        border-radius: 20px;
+    }
+
+    .card-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
+    }
+
+    .card-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .card-title {
+        font-size: 21px;
+    }
+
+    .card-subtitle {
+        font-size: 13px;
+    }
+
+    .tags-grid {
+        gap: 8px;
+    }
+
+    .tag-btn {
+        padding: 8px 13px;
+        font-size: 12.5px;
+        gap: 6px;
+    }
+
+    .tag-icon {
+        width: 19px;
+        height: 19px;
+    }
+
+    .tag-icon svg {
+        width: 11px;
+        height: 11px;
+    }
+
+    .card-actions {
+        flex-direction: column-reverse;
+        gap: 8px;
+    }
+
+    .btn-skip,
+    .btn-next {
+        width: 100%;
+        justify-content: center;
+        padding: 13px 20px;
+    }
+
+    .deco-blob-1,
+    .deco-blob-2 {
+        display: none;
+    }
+}
+
+/* ============================================
+   RESPONSIVE — Small
+   ============================================ */
+@media (max-width: 380px) {
+    .card-title {
+        font-size: 19px;
+    }
+
+    .tag-btn {
+        font-size: 12px;
+        padding: 7px 11px;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+.tag-btn:focus-visible,
+.btn-skip:focus-visible,
+.btn-next-active:focus-visible {
+    outline: 2px solid #111111;
+    outline-offset: 2px;
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Otp;
+use App\Mail\RegisterOtpMail; // Gunakan Mailer yang baru
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +17,7 @@ class RegisteredUserController extends Controller
 {
     /**
      * TAHAP 1: Menerima Pendaftaran & Kirim OTP Awal
+     * REVISI: Menggunakan Queue agar tidak loading lama
      */
     public function store(Request $request): JsonResponse
     {
@@ -37,11 +39,8 @@ class RegisteredUserController extends Controller
                 ]
             );
 
-            // Kirim Email
-            Mail::raw("Halo {$request->name},\n\nKode verifikasi SukaMuda kamu adalah: {$otpCode}\n\nKode ini berlaku selama 15 menit. Jangan bagikan kode ini kepada siapapun.", function ($message) use ($request) {
-                $message->to($request->email)
-                        ->subject('Kode Verifikasi SukaMuda');
-            });
+            // KIRIM EMAIL PAKE QUEUE (Daftar jadi Cepet!)
+            Mail::to($request->email)->send(new RegisterOtpMail($request->name, $otpCode));
 
             return response()->json([
                 'status'  => 'success',
@@ -58,16 +57,15 @@ class RegisteredUserController extends Controller
 
     /**
      * FITUR: Kirim Ulang OTP
+     * REVISI: Menggunakan Queue
      */
     public function resendOtp(Request $request): JsonResponse
     {
-        // Validasi email harus ada agar tidak error
         $request->validate(['email' => 'required|email']);
         
         $otpCode = rand(100000, 999999);
 
         try {
-            // Pastikan data OTP diupdate dengan yang baru
             Otp::updateOrCreate(
                 ['email' => $request->email],
                 [
@@ -76,10 +74,8 @@ class RegisteredUserController extends Controller
                 ]
             );
 
-            Mail::raw("Ini adalah kode verifikasi BARU kamu: {$otpCode}\n\nBerlaku selama 15 menit.", function ($message) use ($request) {
-                $message->to($request->email)
-                        ->subject('Kode Baru SukaMuda');
-            });
+            // KIRIM ULANG PAKE QUEUE
+            Mail::to($request->email)->send(new RegisterOtpMail('User SukaMuda', $otpCode));
 
             return response()->json([
                 'status'  => 'success',
@@ -106,7 +102,6 @@ class RegisteredUserController extends Controller
             'password' => 'required',
         ]);
 
-        // 1. Cari data OTP yang cocok
         $otpData = Otp::where('email', $request->email)
                       ->where('otp', $request->otp)
                       ->first();
@@ -118,7 +113,6 @@ class RegisteredUserController extends Controller
             ], 422);
         }
 
-        // 2. Cek Kadaluwarsa
         if (Carbon::parse($otpData->expires_at)->isPast()) {
             return response()->json([
                 'status'  => 'error',
@@ -126,7 +120,6 @@ class RegisteredUserController extends Controller
             ], 422);
         }
 
-        // 3. Cek apakah user sudah terdaftar (double protection)
         if (User::where('email', $request->email)->exists()) {
             return response()->json([
                 'status'  => 'error',
@@ -135,7 +128,6 @@ class RegisteredUserController extends Controller
         }
 
         try {
-            // 4. Buat Akun User
             $user = User::create([
                 'name'              => $request->name,
                 'email'             => $request->email,
@@ -143,10 +135,8 @@ class RegisteredUserController extends Controller
                 'email_verified_at' => Carbon::now(),
             ]);
 
-            // 5. Hapus OTP yang sudah sukses dipakai
             $otpData->delete();
 
-            // 6. Login Otomatis (Sanctum Session)
             Auth::login($user);
 
             return response()->json([

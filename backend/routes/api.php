@@ -2,40 +2,69 @@
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ArticleController; 
+use App\Http\Controllers\AuthController; 
+use App\Http\Controllers\UserController; // 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes - SUKAMUDA
+| API Routes - SUKAMUDA (SECURED VERSION)
 |--------------------------------------------------------------------------
-| Jalur ini otomatis memiliki prefix /api.
-| Contoh: http://127.0.0.1:8000/api/register
 */
 
-// --- AUTHENTICATION ---
-
-// 1. LOGIN (Wajib punya ->name('login') agar tidak error 404 saat session habis)
+// --- PUBLIC ROUTES (BASIC PROTECTION) ---
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
-
-// 2. LOGOUT (Hanya bisa diakses jika user sudah login/punya token)
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth:sanctum')
-    ->name('logout');
-
-// 3. GET USER DATA (Untuk cek status login di React)
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
-// --- REGISTRATION FLOW (OTP SYSTEM) ---
-
-// 4. TAHAP 1: Register awal (Validasi input & kirim kode OTP ke email)
 Route::post('/register', [RegisteredUserController::class, 'store']);
 
-// 5. TAHAP KHUSUS: Kirim ulang kode OTP (Jika kode tidak masuk atau expired)
-Route::post('/resend-otp', [RegisteredUserController::class, 'resendOtp']);
+// TAMBAHKAN RATE LIMIT UNTUK MENCEGAH SPAM OTP (Maksimal 5x minta per jam per IP)
+Route::middleware('throttle:5,60')->group(function () {
+    Route::post('/resend-otp', [RegisteredUserController::class, 'resendOtp']);
+    Route::post('/verify-otp', [RegisteredUserController::class, 'verifyOtp']);
+    Route::post('/forgot-password/send-otp', [AuthController::class, 'sendResetOtp']);
+    Route::post('/forgot-password/reset', [AuthController::class, 'resetPassword']);
+});
 
-// 6. TAHAP 2: Verifikasi Kode & Pembuatan Akun secara permanen
-Route::post('/verify-otp', [RegisteredUserController::class, 'verifyOtp']);
+// ARTIKEL (PUBLIC)
+Route::get('/public-articles', [ArticleController::class, 'getPublicArticles']);
+Route::get('/trending-articles', [ArticleController::class, 'getTrendingArticles']); // DITAMBAHKAN DI SINI
+Route::get('/articles/{id}/view', [ArticleController::class, 'incrementView']);
+Route::get('/articles/{id}/comments', [ArticleController::class, 'getComments']);
+
+
+// --- PROTECTED ROUTES (HARUS LOGIN) ---
+Route::middleware('auth:sanctum')->group(function () {
+    
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // --- FITUR PROFIL & STATISTIK (TAMBAHAN BARU) ---
+    Route::get('/profile-data', [UserController::class, 'getProfile']); 
+    Route::post('/profile-update', [UserController::class, 'updateProfile']);
+    Route::post('/profile-password', [UserController::class, 'changePassword']);
+    // ------------------------------------------------
+
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+    // SISTEM ARTIKEL (USER BIASA - MENULIS & BERINTERAKSI)
+    Route::get('/articles', [ArticleController::class, 'index']);           
+    Route::post('/articles', [ArticleController::class, 'store']);           
+
+    // SISTEM KOMENTAR
+    Route::post('/articles/{id}/comments', [ArticleController::class, 'storeComment']);
+    Route::delete('/comments/{id}', [ArticleController::class, 'deleteComment']);
+
+    // SISTEM INTERAKSI
+    Route::post('/articles/{id}/like', [ArticleController::class, 'toggleLike']);
+    Route::post('/articles/{id}/bookmark', [ArticleController::class, 'toggleBookmark']);
+
+    // --- AREA ADMIN (DIPISAH PAKAI MIDDLEWARE ADMIN) ---
+    Route::middleware('admin')->group(function () {
+        Route::patch('/articles/{id}/status', [ArticleController::class, 'updateStatus']); 
+        Route::delete('/articles/{id}', [ArticleController::class, 'destroy']); 
+    });
+
+});

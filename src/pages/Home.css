@@ -1,126 +1,390 @@
-.home-container{
+/* === VARIABEL GLOBAL & BASE === */
+.home-container {
   width: 100%;
   max-width: 1200px;
-  margin: auto;
-  padding: 40px 20px;
-  color : black;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+  color: #222;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+a { text-decoration: none; color: inherit; }
+
+/* === BREAKING NEWS TICKER === */
+.breaking-news-bar {
+  display: flex;
+  align-items: center;
+  background: #1a1a1a;
+  color: white;
+  padding: 10px 0;
+  margin-bottom: 30px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.breaking-label {
+  background: #d32f2f;
+  color: white;
+  padding: 6px 20px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.ticker-wrapper {
+  overflow: hidden;
+  flex-grow: 1;
+  margin-left: 20px;
+}
+
+.ticker-content {
+  display: flex;
+  gap: 60px;
+  animation: ticker-scroll 30s linear infinite;
+  width: max-content;
+}
+
+.ticker-item {
+  white-space: nowrap;
+  color: #e0e0e0;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.ticker-item:hover { color: #fff; }
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* =========================================
+   TRENDING SECTION (LIST/STREAM STYLE)
+   ========================================= */
+.trending-section {
+  background: #fafafa;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  margin-bottom: 40px;
+}
+
+.trending-total {
+  font-size: 13px;
+  color: #777;
+  background: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-weight: 600;
+}
+
+.trending-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.trending-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid #eaeaea;
+  text-decoration: none;
+  color: #222;
+  transition: all 0.2s ease;
+}
+
+.trending-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.trending-item:first-child {
+  padding-top: 0;
+}
+
+.trending-item:hover {
+  background: #fff;
+  margin: 0 -15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.trending-rank-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.trending-rank {
+  font-size: 28px;
+  font-weight: 900;
+  color: #ff9800;
+  font-family: 'Arial', sans-serif;
+  width: 35px;
+  text-align: center;
+}
+
+.trending-img {
+  width: 110px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.trending-item:hover .trending-img {
+  transform: scale(1.05);
+}
+
+.trending-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.trending-category {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #d32f2f;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.trending-info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #111;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  /* Standar Kompatibilitas */
+  box-orient: vertical;
+  line-clamp: 2;
+}
+
+.trending-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #999;
+}
+
+.skeleton-trending { pointer-events: none; }
+
+/* === ARTICLE CARDS (GRID BIASA) === */
+.article-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.article-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+}
+
+.article-image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.article-image-wrapper img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.article-card:hover .article-image-wrapper img {
+  transform: scale(1.08);
+}
+
+.card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(4px);
+}
+
+.card-content {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+}
+
+.card-content h3 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #111;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  /* Standar Kompatibilitas */
+  box-orient: vertical;
+  line-clamp: 3;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #888;
+  margin-top: auto;
+}
+
+.dot-separator { margin: 0 6px; color: #ccc; }
+
+/* === SECTION HEADER === */
 .home-section {
-  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 .section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 12px;
+}
+
+.section-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-bar {
+  width: 6px;
+  height: 24px;
+  background: #d32f2f;
+  border-radius: 2px;
 }
 
 .section-header h2 {
   margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #111;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .section-link {
   font-size: 14px;
-  color: #1e88e5;
-  text-decoration: none;
+  color: #d32f2f;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.section-link:hover {
-  text-decoration: underline;
+.section-link:hover .arrow-right { transform: translateX(4px); }
+.arrow-right { transition: transform 0.2s; display: inline-block; }
+
+.article-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }
 
-.article-grid{
-  display:grid;
-  grid-template-columns: repeat(3,1fr);
-  gap:20px;
+/* === SKELETON LOADING === */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
-.article-card{
-  display:block;
-  border-radius:10px;
-  overflow:hidden;
-  box-shadow:0 2px 8px rgba(0,0,0,0.1);
-  cursor:pointer;
-  color: black;
-  text-decoration:none;
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
-.article-card img{
-  width:100%;
-  height:180px;
-  object-fit:cover;
+.skeleton-card { pointer-events: none; }
+
+/* === EMPTY STATE === */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+  font-size: 16px;
 }
 
-.article-card h3{
-  padding:10px;
-  font-size:16px;
-  color: black;
-}
-
-@media (max-width: 900px) {
-  /* 1. Ubah grid menjadi 1 kolom saja ke bawah */
+/* =========================================
+   RESPONSIVE DESIGN (HP & TABLET)
+   ========================================= */
+@media (max-width: 1024px) {
   .article-grid {
-    grid-template-columns: 1fr; 
-    gap: 15px;
-  }
-
-  /* 2. Ubah card menjadi flexbox agar gambar & teks bersampingan */
-  .article-card {
-    display: flex; 
-    align-items: flex-start;
-    background: transparent; /* Opsional: hilangkan bg jika ingin clean */
-    box-shadow: none;        /* Opsional: hilangkan shadow agar seperti YouTube */
-    gap: 12px;
-  }
-
-  /* 3. Atur ukuran gambar di sisi kiri */
-  .article-card img {
-    width: 130px;      /* Ukuran lebar gambar */
-    height: 85px;      /* Tinggi gambar */
-    border-radius: 8px;
-    flex-shrink: 0;    /* Agar gambar tidak mengecil saat teks panjang */
-  }
-
-  /* 4. Atur teks di sisi kanan */
-  .article-card h3 {
-    padding: 0;        /* Hilangkan padding bawaan agar sejajar gambar */
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.4;
-    text-align: left;
-    /* Limit teks jadi 2 baris saja */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-.article-card:nth-child(3n) {
-    display: block; /* Ubah dari flex kembali ke block agar menumpuk vertikal */
-    width: 100%;
-    margin-bottom: 20px;
-    background: #f9f9f9; /* Opsional: kasih background beda biar menonjol */
-    padding-bottom: 15px;
-    border-radius: 12px;
+@media (max-width: 768px) {
+  .home-container { padding: 0 15px 30px; }
+  
+  .article-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
-  /* Buat gambar di artikel ke-4 jadi full lebar */
-  .article-card:nth-child(3n) img {
-    width: 100%;
-    height: 200px; /* Ukuran lebih tinggi karena dia jadi highlight */
-    margin-bottom: 10px;
+  .section-header h2 { font-size: 16px; }
+  
+  .trending-section { padding: 15px; }
+  
+  .trending-item {
+    gap: 12px;
+    padding: 14px 0;
   }
 
-  /* Buat teks di artikel ke-4 jadi lebih besar/tebal */
-  .article-card:nth-child(3n) h3 {
-    padding: 0 10px;
-    font-size: 18px; /* Judul lebih besar */
-    -webkit-line-clamp: 3; /* Kasih ruang lebih banyak untuk judul */
-    font-weight: bold;
+  .trending-rank {
+    font-size: 20px;
+    width: 25px;
   }
 
+  .trending-rank-wrapper { gap: 10px; }
 
+  .trending-img {
+    width: 85px;
+    height: 60px;
+  }
+
+  .trending-info h4 { font-size: 14px; }
+
+  .trending-item:hover {
+    margin: 0 -10px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

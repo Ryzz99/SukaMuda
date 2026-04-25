@@ -2,34 +2,40 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logoSukaMuda from '../assets/logo.png';
-import { IoNotificationsSharp, IoCreateOutline, IoMenu, IoClose } from 'react-icons/io5';
+import { IoNotificationsSharp, IoCreateOutline, IoMenu, IoClose } from 'react-icons/io5'; 
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, user } = useAuth(); 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
-  // STATE UNTUK DROPDOWN MENU (NEWS & LIFESTYLE)
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   
   const navigate = useNavigate();
   const sidebarRef = useRef();
-  const navMenuRef = useRef(); // Tambahan: Ref untuk area menu kategori
+  const navMenuRef = useRef();
 
-  // FUNGSI UNTUK BUKA/TUTUP DROPDOWN
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
+  };
+
+  // --- FUNGSI SEARCH ---
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' || e.type === 'click') {
+      if (searchTerm.trim()) {
+        navigate(`/search?q=${searchTerm}`);
+        setSearchTerm("");
+      }
+    }
   };
 
   // Menutup sidebar & dropdown jika klik di luar
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Menutup Sidebar jika klik di luar container sidebar
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
         setIsSidebarOpen(false);
       }
       
-      // Menutup Dropdown Sub-Rubrik jika klik di luar area navbar-bottom
       if (navMenuRef.current && !navMenuRef.current.contains(event.target)) {
         setActiveDropdown(null);
       }
@@ -41,10 +47,16 @@ const Navbar = () => {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
+  // Helper untuk navigasi kategori dengan auto-close dropdown
+  const navigateToCategory = (slug) => {
+    navigate(`/category/${slug}`);
+    setActiveDropdown(null);
+    setIsSidebarOpen(false);
+  };
+
   return (
     <>
       <nav className="navbar-container">
-        {/* --- NAVBAR ATAS (Logo, Search, Icons) --- */}
         <div className="navbar-top">
           <div className="logo-section">
             <div className="logo-circle" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
@@ -52,10 +64,23 @@ const Navbar = () => {
             </div>
           </div>
           
+          {/* --- SEARCH SECTION --- */}
           <div className="search-section">
             <div className="search-bar">
-              <span className="search-icon">🔍</span>
-              <input type="text" placeholder="Pencarian" />
+              <span 
+                className="search-icon" 
+                onClick={handleSearch}
+                style={{ cursor: 'pointer' }}
+              >
+                🔍
+              </span>
+              <input 
+                type="text" 
+                placeholder="Pencarian" 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleSearch}
+              />
             </div>
           </div>
 
@@ -82,49 +107,41 @@ const Navbar = () => {
         </div>
 
         {/* --- NAVBAR BAWAH (Menu Kategori & Dropdown) --- */}
-        <div className="navbar-bottom" ref={navMenuRef}> {/* Tambahan: ref dipasang di sini */}
+        <div className="navbar-bottom" ref={navMenuRef}>
           <ul className="nav-menu">
-            {/* ITEM MENU: NEWS */}
             <li className="nav-item">
               <div className="menu-header" onClick={() => toggleDropdown('news')}>
                 News <span className={`arrow ${activeDropdown === 'news' ? 'up' : 'down'}`}></span>
               </div>
               {activeDropdown === 'news' && (
                 <ul className="dropdown-menu">
-<<<<<<< HEAD
-                  <li onClick={() => navigate('/category/school')}>School</li>
-                  <li onClick={() => navigate('/category/college')}>College</li>
-                  <li onClick={() => navigate('/category/general')}>General</li>
-=======
-                  <li onClick={() => navigate('/category/School')}>School</li>
-                  <li onClick={() => navigate('/category/College')}>College</li>
-                  <li onClick={() => navigate('/category/General')}>General</li>
->>>>>>> af121a43af6ee04d900eeb2504ea3e5d1f7ff724
+                  <li onClick={() => navigateToCategory('school')}>School</li>
+                  <li onClick={() => navigateToCategory('college')}>College</li>
+                  <li onClick={() => navigateToCategory('general')}>General</li>
                 </ul>
               )}
             </li>
 
-            {/* ITEM MENU: LIFESTYLE */}
             <li className="nav-item">
               <div className="menu-header" onClick={() => toggleDropdown('lifestyle')}>
                 Lifestyle <span className={`arrow ${activeDropdown === 'lifestyle' ? 'up' : 'down'}`}></span>
               </div>
               {activeDropdown === 'lifestyle' && (
                 <ul className="dropdown-menu">
-                  <li onClick={() => navigate('/category/style')}>Style</li>
-                  <li onClick={() => navigate('/category/culinary')}>Culinary</li>
-                  <li onClick={() => navigate('/category/traveling')}>Traveling</li>
+                  <li onClick={() => navigateToCategory('style')}>Style</li>
+                  <li onClick={() => navigateToCategory('culinary')}>Culinary</li>
+                  <li onClick={() => navigateToCategory('traveling')}>Traveling</li>
                 </ul>
               )}
             </li>
 
-            <li className="nav-item" onClick={() => navigate('/category/sport')}>Sport & E-Sport</li>
-            <li className="nav-item" onClick={() => navigate('/category/music')}>Music & Film</li>
-            <li className="nav-item" onClick={() => navigate('/category/otomotif')}>Otomotif</li>
-            <li className="nav-item" onClick={() => navigate('/category/science')}>Science</li>
-            <li className="nav-item" onClick={() => navigate('/category/health')}>Health</li>
-            <li className="nav-item" onClick={() => navigate('/category/tech')}>Tech</li>
-            <li className="nav-item" onClick={() => navigate('/category/podcast')}>Podcast</li>
+            <li className="nav-item" onClick={() => navigateToCategory('sport')}>Sport & E-Sport</li>
+            <li className="nav-item" onClick={() => navigateToCategory('music')}>Music & Film</li>
+            <li className="nav-item" onClick={() => navigateToCategory('otomotif')}>Otomotif</li>
+            <li className="nav-item" onClick={() => navigateToCategory('science')}>Science</li>
+            <li className="nav-item" onClick={() => navigateToCategory('health')}>Health</li>
+            <li className="nav-item" onClick={() => navigateToCategory('tech')}>Tech</li>
+            <li className="nav-item" onClick={() => navigateToCategory('podcast')}>Podcast</li>
           </ul>
         </div>
       </nav>
@@ -133,13 +150,35 @@ const Navbar = () => {
       <div className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`}>
         <div className={`sidebar-container ${isSidebarOpen ? 'open' : ''}`} ref={sidebarRef}>
           <div className="sidebar-header">
-             <div className="sidebar-icons">
-                <IoClose className="s-icon close-btn" onClick={toggleSidebar} />
-             </div>
+            <div className="sidebar-icons">
+              <IoClose className="s-icon close-btn" onClick={toggleSidebar} />
+            </div>
           </div>
 
           <div className="sidebar-content">
+            {isLoggedIn && (
+              <div className="sidebar-user-info" style={{ padding: '0 20px 20px' }}>
+                <p style={{ fontWeight: 'bold', margin: 0 }}>Halo, {user?.name || 'User'}</p>
+                <p style={{ fontSize: '12px', color: 'gray', margin: 0 }}>
+                  {user?.role === 'admin' ? 'Administrator' : 'Anggota'}
+                </p>
+              </div>
+            )}
+
             <ul className="sidebar-menu-list">
+              {isLoggedIn && user?.role === 'admin' && (
+                <li 
+                  onClick={() => { navigate('/admin'); toggleSidebar(); }} 
+                  style={{ 
+                    color: '#f97316', 
+                    fontWeight: 'bold', 
+                    borderLeft: '4px solid #f97316', 
+                    paddingLeft: '16px' 
+                  }}
+                >
+                  Dashboard Admin
+                </li>
+              )}
               <li onClick={() => { navigate('/profile'); toggleSidebar(); }}>Profil Saya</li>
               <li onClick={() => { navigate('/about'); toggleSidebar(); }}>About</li>
               <li onClick={() => { navigate('/terms'); toggleSidebar(); }}>Syarat & Ketentuan</li>
@@ -149,7 +188,9 @@ const Navbar = () => {
           </div>
 
           <div className="sidebar-footer">
-            <button className="btn-logout" onClick={() => { logout(); toggleSidebar(); }}>Keluar</button>
+            <button className="btn-logout" onClick={() => { logout(); toggleSidebar(); }}>
+              Keluar
+            </button>
           </div>
         </div>
       </div>
