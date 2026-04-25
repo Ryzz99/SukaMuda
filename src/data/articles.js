@@ -1,5 +1,9 @@
 export const categories = [
+<<<<<<< HEAD
   { slug: "school", label: "School", group: "news" },
+=======
+  { slug: "osis", label: "Osis", group: "news" },
+>>>>>>> af121a43af6ee04d900eeb2504ea3e5d1f7ff724
   { slug: "college", label: "College", group: "news" },
   { slug: "general", label: "General", group: "news" },
   { slug: "style", label: "Style", group: "lifestyle" },

@@ -91,9 +91,15 @@ const Navbar = () => {
               </div>
               {activeDropdown === 'news' && (
                 <ul className="dropdown-menu">
+<<<<<<< HEAD
                   <li onClick={() => navigate('/category/school')}>School</li>
                   <li onClick={() => navigate('/category/college')}>College</li>
                   <li onClick={() => navigate('/category/general')}>General</li>
+=======
+                  <li onClick={() => navigate('/category/School')}>School</li>
+                  <li onClick={() => navigate('/category/College')}>College</li>
+                  <li onClick={() => navigate('/category/General')}>General</li>
+>>>>>>> af121a43af6ee04d900eeb2504ea3e5d1f7ff724
                 </ul>
               )}
             </li>

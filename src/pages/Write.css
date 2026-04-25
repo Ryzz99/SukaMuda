@@ -1,21 +1,28 @@
+/* ================= HALAMAN UTAMA & CONTAINER ================= */
 .menulis-form-page {
   background: #ffffff;
+  min-height: 100vh;
 }
 
 .menulis-form-page .content {
-  padding: 32px 120px 60px;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 50px 20px 80px;
 }
 
 .write-form {
-  display: grid;
-  gap: 22px;
-  color: black
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  color: #222222;
 }
 
+/* ================= HEADER ================= */
 .write-header {
-  display: grid;
-  grid-template-columns: 40px 1fr 40px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
 }
 
 .back-link-btn {
@@ -23,210 +30,234 @@
   border: none;
   cursor: pointer;
   font-size: 22px;
-  color: inherit;
+  color: #333;
   padding: 0;
-  text-align: left;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.back-link-btn:hover {
+  color: #1e76d0;
 }
 
 .write-heading {
   margin: 0;
   text-align: center;
-  font-size: 28px;
-  letter-spacing: 1px;
+  font-size: 26px;
+  letter-spacing: 2px;
+  font-weight: 800;
+  color: #111;
 }
 
+/* ================= FORM INPUT GRID ================= */
 .form-row {
   display: grid;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: 120px 1fr;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 
 .form-label {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
+  color: #444;
+  text-align: left;
 }
 
-.form-select,
 .form-input {
-  height: 44px;
-  background: white;
-  color: black;
+  height: 46px;
+  background: #f8f9fa;
+  color: #222;
+  border: 1px solid #e1e4e8;
   border-radius: 10px;
   padding: 0 16px;
-  font-size: 16px;
+  font-size: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #1e76d0;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(30, 118, 208, 0.1);
+}
+
+/* ================= DROPDOWN CATEGORY (FIX PANAH & KUNING) ================= */
+.form-select {
+  max-width: 240px;
+  height: 46px;
+  background-color: #111111;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0 16px;
+  font-size: 15px;
+  cursor: pointer;
+  
+  /* Mengembalikan panah dropdown bawaan sistem */
+  -webkit-appearance: menulist;
+  -moz-appearance: menulist;
+  appearance: menulist;
+  
+  /* Mencegah warna kuning/electro bawaan browser saat list dibuka */
+  color-scheme: light; 
+}
+
+.form-select:focus {
+  background-color: #111111 !important;
+  color: white !important;
+  outline: none;
+}
+
+/* Memastikan list pilihan tetap bersih putih */
+.form-select option {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+}
+
+/* ================= THUMBNAIL ================= */
+.thumbnail-input {
+  display: flex;
+  align-items: center;
+  gap: 24px;
   width: 100%;
 }
 
-.form-select {
-  max-width: 200px;
-  background: black;
-  color: white;
+input[type="file"].form-input {
+  height: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  max-width: 260px;
+  font-size: 14px;
+  color: #555;
+}
+
+input[type="file"].form-input:focus {
+  box-shadow: none;
   border: none;
 }
 
+.thumbnail-preview {
+  width: 130px;
+  height: 85px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #e1e4e8;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* ================= QUILL EDITOR ================= */
 .editor-wrapper {
-  display: grid;
-  gap: 12px;
-  border: none;
-  background: transparent;
+  margin: 8px 0;
+  border: 1px solid #e1e4e8;
+  border-radius: 12px;
   overflow: hidden;
-  color: black;
+  background: #ffffff;
+  transition: border-color 0.2s;
+}
+
+.editor-wrapper:focus-within {
+  border-color: #1e76d0;
 }
 
 .editor-toolbar {
   display: flex;
   align-items: center;
   gap: 2px;
-  padding: 8px 12px;
-  border-bottom: 1px solid #c9c9c9;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafbfc;
   flex-wrap: wrap;
-  background: transparent;
-  border: 1px solid #c9c9c9 !important; 
 }
 
 .editor-body {
   background: white;
-  min-height: 240px; 
-  border: 1px solid #c9c9c9 !important;
-}
-
-.ql-editor {
-  padding: 15px !important;
+  min-height: 280px; 
 }
 
 .menulis-form-page .ql-toolbar.ql-snow {
-  border: none;
+  border: none !important;
   padding: 0;
   color: black;
 }
 
 .menulis-form-page .ql-container.ql-snow {
-  border: none;
+  border: none !important;
+  font-family: inherit;
 }
 
 .menulis-form-page .ql-editor {
-  min-height: 240px;
-  padding: 14px;
+  min-height: 280px;
+  padding: 20px;
   font-size: 16px;
+  line-height: 1.7;
+  color: #222;
 }
 
-/* Tombol-tombol di toolbar */
 .menulis-form-page .ql-toolbar button {
-  border: none;
-  background: transparent;
+  border: none !important;
+  background: transparent !important;
   border-radius: 8px !important;
-  background: #ffffff;
   width: 34px;
   height: 34px;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: background 0.15s;
+}
+
+.menulis-form-page .ql-toolbar button:hover {
+  background: #e9ecef !important;
+}
+
+.menulis-form-page .ql-toolbar button.ql-active {
+  background: #dbeafe !important;
+  color: #1e76d0;
 }
 
 .menulis-form-page .ql-toolbar button.ql-undo,
 .menulis-form-page .ql-toolbar button.ql-redo {
   width: auto !important;
-  padding: 0 10px !important;
-  font-size: 11px;
-  font-weight: 700;
+  padding: 0 8px !important;
 }
 
+/* ================= ACTION BUTTONS ================= */
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 16px;
-  margin-top: 8px;
+  gap: 14px;
+  margin-top: 12px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
 }
 
 .btn-draft {
-  background: #d9d9d9;
-  border: none;
-  border-radius: 12px;
-  padding: 8px 24px;
-  font-weight: 700;
-  font-size: 18px;
+  background: #ffffff;
+  color: #555;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 10px 28px;
+  font-weight: 600;
+  font-size: 15px;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-draft:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
 }
 
 .btn-submit {
   background: #1e76d0;
   color: #ffffff;
   border: none;
-  border-radius: 12px;
-  padding: 8px 28px;
-  font-weight: 700;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-@media (max-width: 960px) {
-  .menulis-form-page .content { padding: 24px; }
-  .form-row { grid-template-columns: 1fr; }
-  .form-select { max-width: 100%; }
-  .write-header { grid-template-columns: 30px 1fr; }
-}
-
-/* Latar belakang gelap transparan */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-/* Kotak Putih Modal */
-.modal-content {
-    background: white;
-    padding: 40px;
-    border-radius: 30px; /* Lengkungan besar sesuai gambar */
-    max-width: 500px;
-    text-align: center;
-    line-height: 1.6;
-    font-size: 14px;
-    color: #333;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.modal-content p {
-    margin-bottom: 20px;
-}
-
-/* Tombol Lanjutkan Biru */
-.btn-lanjutkan {
-    background: #1e76d0;
-    color: white;
-    border: none;
-    padding: 8px 25px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.btn-lanjutkan span {
-    font-size: 18px;
-}
-
-.thumbnail-input {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-}
-
-.thumbnail-preview {
-  width: 120px;
-  height: 80px;
   border-radius: 10px;
+<<<<<<< HEAD
   object-fit: cover;
   border: 1px solid #e0e0e0;
 }
@@ -263,4 +294,140 @@
     height: 20px;
     color: #333;
     flex-shrink: 0;
+=======
+  padding: 10px 32px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(30, 118, 208, 0.2);
+}
+
+.btn-submit:hover {
+  background: #1662ad;
+  box-shadow: 0 4px 8px rgba(30, 118, 208, 0.3);
+}
+
+/* ================= MODAL POPUP ================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.modal-container {
+  background: #ffffff;
+  padding: 36px 40px;
+  border-radius: 16px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+  animation: modalSlideIn 0.25s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111;
+  margin: 0 0 10px 0;
+}
+
+.modal-subtitle {
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 28px 0;
+  line-height: 1.5;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-batal {
+  background: #f3f4f6;
+  color: #444;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-batal:hover {
+  background: #e5e7eb;
+}
+
+.btn-konfirmasi-hapus {
+  background: #1e76d0;
+  color: white;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-konfirmasi-hapus:hover {
+  background: #1662ad;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .menulis-form-page .content { 
+    padding: 30px 16px 60px; 
+  }
+  
+  .form-row { 
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .form-label {
+    font-size: 14px;
+  }
+  
+  .form-select { 
+    max-width: 100%; 
+  }
+
+  .thumbnail-input {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  input[type="file"].form-input {
+    max-width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-draft, .btn-submit {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+>>>>>>> af121a43af6ee04d900eeb2504ea3e5d1f7ff724
 }

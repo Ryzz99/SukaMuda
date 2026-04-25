@@ -1,175 +1,372 @@
-/* Container Utama */
-.help-page-bg {
-  background-color: #ffffff; /* Putih Bersih */
-  min-height: 100vh;
-  padding: 50px 20px;
-  color: #000000; /* Tulisan Hitam */
-  font-family: 'Inter', sans-serif;
-}
-
-/* Header */
-.help-header-section {
+/* ================= HELP HERO ================= */
+.rules-help-hero {
+  min-height: 45vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 60px;
   position: relative;
-  max-width: 800px;
-  margin: 0 auto 40px;
 }
 
-.help-back-icon {
+.rules-help-hero::after {
+  content: '';
   position: absolute;
-  left: 0;
-  background: none;
-  border: none;
-  font-size: 28px;
-  cursor: pointer;
-  color: #000000;
+  bottom: 0;
+  right: 0;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.015) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-.help-main-title {
-  font-weight: 900;
-  font-size: 26px;
-  letter-spacing: 2px;
+.rules-help-hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1.05;
+  margin: 0 0 20px;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.75) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.rules-help-hero-sub {
+  color: var(--text-gray);
+  font-size: 16px;
+  max-width: 500px;
+  line-height: 1.7;
   margin: 0;
 }
 
-/* Wrapper Konten */
-.help-content-wrapper {
-  max-width: 550px;
+/* ================= HELP SPLIT GRID ================= */
+.rules-help-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 60px;
+  align-items: start;
+  max-width: 900px;
   margin: 0 auto;
 }
 
-.help-question {
-  font-size: 19px;
-  font-weight: 800;
-  margin-bottom: 10px;
+/* ================= KOLOM KIRI (INFO) ================= */
+.rules-help-info-sticky {
+  position: sticky;
+  top: 60px;
 }
 
-.help-instruction {
-  font-size: 14px;
-  line-height: 1.6;
-  margin-bottom: 30px;
-  font-weight: 500;
+.rules-help-col-title {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 0 0 32px;
+  color: #fff;
 }
 
-/* Label & Input */
-.help-label-text {
-  display: block;
-  font-weight: 800;
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-.help-input-field, 
-.help-textarea-field {
-  width: 100%;
-  padding: 14px 18px;
-  margin-bottom: 20px;
-  border: 2px solid #000000; /* Border Hitam Tebal */
-  border-radius: 12px;
-  font-size: 15px;
-  box-sizing: border-box;
-  outline: none;
-  background-color: #ffffff;
-  color: #000000;
-}
-
-.help-textarea-field {
-  height: 120px;
-  resize: none;
-}
-
-/* Kategori Radio */
-.help-category-list {
+.rules-help-info-cards {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-bottom: 25px;
+  gap: 20px;
 }
 
-.help-radio-box {
+.rules-help-info-item {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
+  gap: 20px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
 }
 
-.help-radio-box input[type="radio"] {
-  width: 20px;
-  height: 20px;
-  accent-color: #000000; /* Warna Check Hitam */
-  cursor: pointer;
+.rules-help-info-item:hover {
+  border-color: var(--border-glass-hover);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
 }
 
-.radio-text {
-  font-size: 15px;
-  font-weight: 600;
-}
-
-/* Tombol Kirim */
-.help-submit-btn {
-  background-color: #000000;
-  color: #ffffff;
-  border: 2px solid #000000;
-  padding: 14px 50px;
-  border-radius: 40px;
-  font-weight: 900;
-  font-size: 16px;
-  cursor: pointer;
-  display: block;
-  margin: 20px auto 0;
-  transition: all 0.2s ease-in-out;
-}
-
-.help-submit-btn:hover {
-  background-color: #ffffff;
-  color: #000000;
-}
-
-/* Sembunyikan radio button bawaan browser */
-.help-radio-box input[type="radio"] {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  border: 1px solid #000000; /* Lingkaran hitam tipis */
-  border-radius: 50%;
-  background-color: #ffffff; /* Warna putih polos awal */
-  cursor: pointer;
+.rules-help-info-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.rules-help-info-item h4 {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0 0 6px;
+}
+
+.rules-help-info-item p {
+  color: var(--text-gray);
+  font-size: 13.5px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ================= KOLOM KANAN (FORM CARD) ================= */
+.rules-help-form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  padding: 40px;
   position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 
-/* Tampilan saat radio button dipilih (Checked) */
-.help-radio-box input[type="radio"]:checked {
-  background-color: #ffffff; /* Tetap putih dasarnya */
-  border: 2px solid #000000; /* Border sedikit lebih tegas saat dipilih */
+.rules-help-form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 10%, rgba(255, 255, 255, 0.2) 50%, transparent 90%);
 }
 
-/* Membuat titik hitam di tengah saat dipilih */
-.help-radio-box input[type="radio"]:checked::after {
-  content: "";
-  width: 12px;
-  height: 12px;
-  background-color: #000000; /* Titik hitam pekat di tengah */
-  border-radius: 50%;
-  display: block;
+.rules-help-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 32px;
 }
 
-/* Efek hover supaya lebih interaktif */
-.help-radio-box input[type="radio"]:hover {
-  border-color: #666;
-  background-color: #f9f9f9;
+/* ================= FORM ELEMENTS ================= */
+.rules-help-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* Pastikan teks di sampingnya tetap rapi */
-.radio-text {
-  font-size: 15px;
+.rules-help-form-group label {
+  font-family: var(--font-body);
+  font-size: 11px;
   font-weight: 600;
-  color: #000000;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.rules-help-form-group input,
+.rules-help-form-group textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 16px 20px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: #fff;
+  transition: all var(--transition-base);
+  outline: none;
+}
+
+.rules-help-form-group input::placeholder,
+.rules-help-form-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.rules-help-form-group input:focus,
+.rules-help-form-group textarea:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.03);
+}
+
+.rules-help-form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.rules-help-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ================= CUSTOM RADIO ================= */
+.rules-help-radio-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rules-help-radio-pill {
+  position: relative;
   cursor: pointer;
+}
+
+.rules-help-radio-pill input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.rules-help-radio-pill span {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-gray);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all var(--transition-base);
+}
+
+.rules-help-radio-pill span:hover {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.rules-help-radio-pill input:checked + span {
+  color: #000;
+  background: #fff;
+  border-color: #fff;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+}
+
+/* ================= SUCCESS BANNER ================= */
+.rules-help-success-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  margin-bottom: 8px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  animation: reveal 0.5s ease forwards;
+}
+
+.rules-help-success-banner svg {
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* ================= SUBMIT BUTTON ================= */
+.rules-help-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: #fff;
+  color: #000;
+  padding: 18px 32px;
+  border-radius: 18px;
+  border: none;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  letter-spacing: -0.2px;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-base);
+}
+
+.rules-help-submit-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(255, 255, 255, 0.12);
+}
+
+.rules-help-submit-btn:active {
+  transform: translateY(-1px);
+}
+
+/* ================= TOMBOL KEMBALI BAWAH ================= */
+.rules-help-back-btn-bottom {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-glass);
+  padding: 14px 32px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin: 40px 0 20px;
+}
+
+.rules-help-back-btn-bottom:hover {
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.rules-help-back-btn-bottom:active {
+  transform: translateY(0);
+}
+
+/* ================= RESPONSIVE HELP ================= */
+@media (max-width: 900px) {
+  .rules-help-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    max-width: 100%;
+    padding: 0 10px;
+  }
+  
+  .rules-help-info-sticky {
+    position: relative;
+    top: auto;
+  }
+
+  .rules-help-info-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .rules-help-hero {
+    min-height: 35vh;
+    padding-bottom: 40px;
+  }
+
+  .rules-help-form-card {
+    padding: 28px 24px;
+    border-radius: var(--radius-lg);
+  }
+
+  .rules-help-form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .rules-help-radio-group {
+    flex-direction: column;
+  }
+
+  .rules-help-radio-pill span {
+    width: 100%;
+    text-align: center;
+  }
 }
