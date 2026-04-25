@@ -17,6 +17,7 @@ function Home() {
             event.currentTarget.style.display = "none";
           }}
         />
+        
         <h3>{article.title}</h3>
       </Link>
     );
@@ -27,7 +28,7 @@ function Home() {
       {categoryGroups.map((group) => {
         const groupArticles = allArticles
           .filter((item) => group.categorySlugs.includes(item.category))
-          .slice(0, 6);
+          .slice(0, 4);
 
         if (groupArticles.length === 0) {
           return null;

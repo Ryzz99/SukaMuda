@@ -291,3 +291,83 @@
 .menu-btn {
   font-size: 32px !important;
 }
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  /* TOP NAV */
+  .navbar-top {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 16px;
+  }
+
+  /* LOGO JADI KECIL & NORMAL (NO ABSOLUTE) */
+  .logo-circle {
+    position: static;
+    width: 50px;
+    height: 50px;
+    transform: none;
+    border: none;
+  }
+
+  .logo-circle img {
+    width: 100%;
+  }
+
+  /* SEARCH BAR FULL WIDTH */
+  .search-bar {
+    width: 100%;
+    padding: 6px 12px;
+  }
+
+  .search-bar:focus-within {
+    width: 100%;
+  }
+
+  /* AUTH BUTTON DISIMPAN / DIKECILIN */
+  .auth-buttons {
+    display: none; /* biar clean, bisa pindahin ke sidebar */
+  }
+
+  /* ICONS */
+  .logged-in-icons {
+    gap: 10px;
+    font-size: 20px;
+  }
+
+  /* ================= BOTTOM NAV ================= */
+
+  .navbar-bottom {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+
+  .nav-menu {
+    padding: 0 10px;
+    gap: 10px;
+    overflow-x: auto;
+    overflow: visible;
+  }
+
+  .nav-item {
+    padding: 8px 12px;
+    font-size: 14px;
+    white-space: nowrap;
+    position: relative;
+  }
+}
+
+.dropdown-menu {
+    position: fixed; 
+    top: auto;     
+    left: auto;
+
+    background-color: #222;
+    min-width: 150px;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+
+    z-index: 99999;
+    overflow: visible;
+  }

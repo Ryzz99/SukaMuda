@@ -35,7 +35,22 @@ const ArticleDetail = () => {
         <img src={article.image} alt={article.title} />
       </div>
       <div className="detail-body">
-        <span className="detail-category">{categoryLabel}</span>
+        
+        {/* --- BAGIAN BARU: KATEGORI & AUTHOR --- */}
+        <div className="detail-meta-wrapper">
+          <span className="detail-category">{categoryLabel}</span>
+          
+          <div className="detail-author-info">
+            <img 
+              src={article.authorImage} 
+              alt={article.authorName} 
+              className="detail-author-pic" 
+            />
+            <span className="detail-author-name">{article.authorName}</span>
+          </div>
+        </div>
+        {/* -------------------------------------- */}
+
         <h1>{article.title}</h1>
         {article.teaser && <p className="detail-teaser">{article.teaser}</p>}
         {article.link && (

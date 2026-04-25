@@ -4,12 +4,13 @@ import { IoLogoInstagram } from 'react-icons/io5';
 import { FaTiktok } from 'react-icons/fa'; // tambah ini
 import './Footer.css';
 import logoSukaMuda from '../assets/logo.png';
+import { SiThreads } from 'react-icons/si';
 
-const Footer = () => { 
+const Footer = () => {
   return (
     <footer className="profile-footer">
       <div className="footer-content">
-        
+
         {/* Bagian Kiri */}
         <div className="footer-logo-section">
           <div className="footer-logo-circle">
@@ -18,20 +19,28 @@ const Footer = () => {
           <div className="social-follow">
             <span>Follow us</span>
 
-            <a 
-              href="https://www.instagram.com/sukamudaid/" 
-              target="_blank" 
+            <a
+              href="https://www.instagram.com/sukamudaid/"
+              target="_blank"
               rel="noopener noreferrer"
             >
               <IoLogoInstagram className="instagram-icon" />
             </a>
 
-            <a 
-              href="https://www.tiktok.com/@suka.muda?is_from_webapp=1&sender_device=pc" 
-              target="_blank" 
+            <a
+              href="https://www.tiktok.com/@suka.muda?is_from_webapp=1&sender_device=pc"
+              target="_blank"
               rel="noopener noreferrer"
             >
               <FaTiktok className="tiktok-icon" />
+            </a>
+
+            <a 
+              href="https://www.threads.net/@sukamudaid" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              >
+              <SiThreads className="threads-icon" />
             </a>
 
           </div>

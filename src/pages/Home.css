@@ -59,3 +59,68 @@
   font-size:16px;
   color: black;
 }
+
+@media (max-width: 900px) {
+  /* 1. Ubah grid menjadi 1 kolom saja ke bawah */
+  .article-grid {
+    grid-template-columns: 1fr; 
+    gap: 15px;
+  }
+
+  /* 2. Ubah card menjadi flexbox agar gambar & teks bersampingan */
+  .article-card {
+    display: flex; 
+    align-items: flex-start;
+    background: transparent; /* Opsional: hilangkan bg jika ingin clean */
+    box-shadow: none;        /* Opsional: hilangkan shadow agar seperti YouTube */
+    gap: 12px;
+  }
+
+  /* 3. Atur ukuran gambar di sisi kiri */
+  .article-card img {
+    width: 130px;      /* Ukuran lebar gambar */
+    height: 85px;      /* Tinggi gambar */
+    border-radius: 8px;
+    flex-shrink: 0;    /* Agar gambar tidak mengecil saat teks panjang */
+  }
+
+  /* 4. Atur teks di sisi kanan */
+  .article-card h3 {
+    padding: 0;        /* Hilangkan padding bawaan agar sejajar gambar */
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: left;
+    /* Limit teks jadi 2 baris saja */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+.article-card:nth-child(3n) {
+    display: block; /* Ubah dari flex kembali ke block agar menumpuk vertikal */
+    width: 100%;
+    margin-bottom: 20px;
+    background: #f9f9f9; /* Opsional: kasih background beda biar menonjol */
+    padding-bottom: 15px;
+    border-radius: 12px;
+  }
+
+  /* Buat gambar di artikel ke-4 jadi full lebar */
+  .article-card:nth-child(3n) img {
+    width: 100%;
+    height: 200px; /* Ukuran lebih tinggi karena dia jadi highlight */
+    margin-bottom: 10px;
+  }
+
+  /* Buat teks di artikel ke-4 jadi lebih besar/tebal */
+  .article-card:nth-child(3n) h3 {
+    padding: 0 10px;
+    font-size: 18px; /* Judul lebih besar */
+    -webkit-line-clamp: 3; /* Kasih ruang lebih banyak untuk judul */
+    font-weight: bold;
+  }
+
+

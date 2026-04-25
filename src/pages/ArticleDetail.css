@@ -223,3 +223,36 @@
   color: #666;
   margin-top: 16px;
 }
+
+/* Container pembungkus Kategori dan Author */
+.detail-meta-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Jarak antara kategori dan profil */
+  margin-bottom: 15px;
+}
+
+/* Style Profil Penulis */
+.detail-author-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-author-pic {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.detail-author-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+}
+
+/* Biar margin bawaan label kategori gak ngerusak posisi */
+.detail-category {
+  margin-bottom: 0 !important; 
+}

@@ -67,6 +67,8 @@ export const articles = [
     id: 27,
     title: "SMANDA Kota Sukabumi Peringkat 3 Nasional: 95 Murid Lolos SNBP 2026, Terbanyak ke IPB",
     category: "general",
+    authorName: "Fitriansyah", 
+    authorImage: "/src/assets/logo.png",
     image: "/images/smanda.png",
     link: "https://www.sukabumiupdate.com/nasional/172796/smanda-kota-sukabumi-peringkat-3-nasional-95-murid-lolos-snbp-2026-terbanyak-ke-ipb",
     tags: [

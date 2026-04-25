@@ -68,6 +68,24 @@
   text-shadow: 0 0 8px rgba(37, 244, 238, 0.7);
 }
 
+/* Styling untuk icon Threads */
+.threads-icon {
+  font-size: 20px;
+  color: #ffffff; /* Warna hitam khas Threads */
+  transition: transform 0.3s ease;
+}
+
+.threads-icon:hover {
+  transform: scale(1.2);
+  color: #444; /* Warna saat di-hover */
+}
+
+/* Pastikan container social-follow menggunakan flex agar sejajar */
+.social-follow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 /* Menu Tengah & Kategori */
 .footer-links, .cat-col {
   display: flex;

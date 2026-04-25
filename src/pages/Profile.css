@@ -35,13 +35,18 @@
 .sub-text { color: #777; margin: 2px 0; }
 
 .profile-avatar-large {
-  width: 180px;
-  height: 180px;
+  width: 120px;
+  height: 120px;
   background-color: #000;
   border-radius: 50%;
   border: 5px solid #fff;
-  margin-top: -90px;
-  z-index: 2;
+
+  position: absolute;
+  top: 0;
+  right: 20px;
+
+  transform: translateY(-50%);
+  z-index: 10;
 }
 
 /* Tabs */
@@ -565,4 +570,75 @@
   font-size: 18px;
   cursor: pointer;
   color: black;
+}
+
+/* ================= MOBILE PROFILE ================= */
+@media (max-width: 768px) {
+
+  /* CONTAINER JADI COLUMN */
+  .profile-info-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  /* AVATAR DIPERKECIL */
+ @media (max-width: 768px) {
+  .profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    right: 15px;
+    top: 0;
+    transform: translateY(-50%);
+  
+
+  }
+}
+
+  /* NAMA DIPERKECIL */
+  .user-details h1 {
+    font-size: 22px;
+  }
+
+  /* BIO */
+  .sub-text {
+    font-size: 13px;
+  }
+
+  /* INTEREST CAPSULE */
+  .interest-capsule {
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+
+  /* TABS */
+  .profile-tabs {
+    font-size: 14px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* POST CARD FULL WIDTH */
+  .post-card {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  /* THUMBNAIL FULL */
+  .post-thumbnail {
+    width: 100%;
+    height: 180px;
+    margin-bottom: 10px;
+  }
+
+  /* TITLE */
+  .post-title {
+    font-size: 16px;
+  }
+
+  /* BUTTON */
+  .btn-selengkapnya {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
 }
