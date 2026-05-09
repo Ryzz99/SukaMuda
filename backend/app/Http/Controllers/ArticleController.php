@@ -14,12 +14,26 @@ use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
-    // 1. Dashboard Admin - Search, Filter, & Pagination Server-Satejarus
+    /**
+     * Helper untuk mengubah path gambar menjadi URL lengkap
+     */
+    private function transformArticles($articles)
+    {
+        $articles->getCollection()->transform(function ($article) {
+            if ($article->image) {
+                if (!filter_var($article->image, FILTER_VALIDATE_URL)) {
+                    $article->image = asset('storage/' . $article->image);
+                }
+            }
+            return $article;
+        });
+        return $articles;
+    }
+
     public function index(Request $request)
     {
         $query = Article::with('user')->withCount('likes');
 
-        // FITUR SEARCH: GANTI LIKE JADI whereFullText (100x LEBIH CEPAT UNTUK DATA BESAR)
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -28,153 +42,182 @@ class ArticleController extends Controller
                 } catch (\Exception $e) {
                     $q->where('title', 'LIKE', "%{$search}%");
                 }
-                
                 $q->orWhereHas('user', function($u) use ($search) {
                     $u->where('name', 'LIKE', "%{$search}%");
                 });
             });
         }
 
-        // FITUR FILTER: Status
         if ($request->has('status') && $request->status != 'all') {
             $query->where('status', $request->status);
         }
 
-        // FITUR FILTER: Kategori
         if ($request->has('category') && $request->category != 'all') {
             $query->where('category', $request->category);
         }
 
-        // Ambil data terbaru
         $articles = $query->latest()->paginate(15);
-
-        return response()->json($articles);
+        return response()->json($this->transformArticles($articles));
     }
 
-    // 2. Halaman Depan (Public)
     public function getPublicArticles(Request $request)
     {
         $user = $request->user('sanctum');
+        $query = Article::where('status', 'approved')->with('user')->withCount('likes');
 
-        $articles = Article::where('status', 'approved')
-            ->with('user')
-            ->withCount('likes');
-
-        // OPTIMASI: Hanya cek "is_liked_by_user" JIKA USER SEDANG LOGIN
-        // Kalau tamu (null), jangan buang resource database untuk mengecek like milik null.
         if ($user) {
-            $articles->withExists(['likes as is_liked_by_user' => function ($query) use ($user) {
-                $query->where('user_id', $user->id);
+            $query->withExists(['likes as is_liked_by_user' => function ($q) use ($user) {
+                $q->where('user_id', $user->id);
             }]);
         }
 
-        $articles = $articles->latest()->paginate(50);
-
+        $articles = $query->latest()->paginate(50);
+        $this->transformArticles($articles);
         return response()->json($articles->items())->header('Cache-Control', 'no-store, no-cache, must-revalidate');
     }
 
-    // --- FITUR TRENDING BARU ---
     public function getTrendingArticles(Request $request)
     {
         $user = $request->user('sanctum');
-
         $articles = Article::where('status', 'approved')
             ->with('user')
-            ->withCount(['likes', 'comments', 'views'])
-            ->select('id', 'title', 'slug', 'category', 'summary', 'image', 'user_id', 'created_at', 'updated_at')
-            ->addSelect(DB::raw('(likes_count * 3) + (comments_count * 5) + (views_count) as popularity_score'))
+            ->withCount(['likes', 'comments'])
+            ->select('id', 'title', 'slug', 'category', 'summary', 'image', 'user_id', 'views', 'created_at', 'updated_at')
+            ->addSelect(DB::raw('((SELECT COUNT(*) FROM article_likes WHERE article_likes.article_id = articles.id) * 3) + ((SELECT COUNT(*) FROM comments WHERE comments.article_id = articles.id) * 5) + (views) as popularity_score'))
             ->orderByDesc('popularity_score')
             ->paginate(20);
 
-        if ($user) {
-            $articles->withExists(['likes as is_liked_by_user' => function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            }]);
-        }
+        $articles->getCollection()->each(function ($article) use ($user) {
+            if ($article->image && !filter_var($article->image, FILTER_VALIDATE_URL)) {
+                $article->image = asset('storage/' . $article->image);
+            }
+            if ($user) $article->is_liked_by_user = $article->likes()->where('user_id', $user->id)->exists();
+        });
 
-        return response()->json($articles->items())->header('Cache-Control', 'no-store, no-cache, must-revalidate');
+        return response()->json($articles->items());
     }
 
-    // 3. Fungsi Kirim Berita
+    /**
+     * FUNGSI SIMPAN ARTIKEL BARU
+     */
     public function store(Request $request)
     {
         $request->validate([
             'title'    => 'required|string|max:255',
             'category' => 'required|string',
             'summary'  => 'nullable|string|max:500',
-            'tags'     => 'nullable|string',
             'content'  => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:2048',
+            'image'    => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
+            'status'   => 'nullable|string|in:draft,review,published,approved,pending'
         ]);
 
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('articles', 'public');
-        }
-
         $user = $request->user();
-        $status = ($user && $user->role === 'admin') ? 'approved' : 'pending';
+        $imagePath = $request->hasFile('image') ? $request->file('image')->store('articles', 'public') : null;
+
+        $finalStatus = $request->status;
+        if (!$finalStatus || $finalStatus === 'published' || $finalStatus === 'review') {
+            $finalStatus = ($user->role === 'admin') ? 'approved' : 'pending';
+        }
 
         $article = Article::create([
             'user_id'  => $user->id,
             'title'    => $request->title,
-            'slug'     => Str::slug($request->title) . '-' . time(), 
+            'slug'     => Str::slug($request->title) . '-' . time(),
             'category' => $request->category,
-            'summary'  => $request->summary, 
-            'tags'     => $request->tags,    
+            'summary'  => $request->summary,
             'content'  => $request->content,
             'image'    => $imagePath,
-            'status'   => $status, 
+            'status'   => $finalStatus,
+            'tags'     => $request->tags,
+            'views'    => 0
         ]);
+
+        if ($article->image) {
+            $article->image = asset('storage/' . $article->image);
+        }
 
         Cache::flush();
-
-        return response()->json([
-            'message' => $status === 'approved' ? 'Berita berhasil diterbitkan!' : 'Berita berhasil dikirim, tunggu tinjauan admin!',
-            'data' => $article
-        ], 201);
+        return response()->json(['message' => 'Berita berhasil dibuat!', 'data' => $article], 201);
     }
 
-    // 4. Update Status (Approve/Reject)
-    public function updateStatus(Request $request, $id)
+    /**
+     * FUNGSI UPDATE ARTIKEL (Perbaikan Error 500)
+     */
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required|in:approved,rejected,pending'
-        ]);
-
         $article = Article::findOrFail($id);
-        $article->status = $request->status;
-        $article->save();
+        $user = $request->user();
 
-        Cache::flush();
+        // Pastikan hanya pemilik atau admin yang bisa update
+        if ($article->user_id !== $user->id && $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
-        return response()->json([
-            'message' => 'Status berita berhasil diubah menjadi ' . $request->status
+        $request->validate([
+            'title'    => 'required|string|max:255',
+            'category' => 'required|string',
+            'summary'  => 'nullable|string|max:500',
+            'content'  => 'required|string',
+            'image'    => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
+            'status'   => 'nullable|string'
         ]);
-    }
 
-    // 5. Fitur Hapus Artikel (Destroy)
-    public function destroy(Request $request, $id)
-    {
-        try {
-            $article = Article::findOrFail($id);
-
+        if ($request->hasFile('image')) {
             if ($article->image) {
                 Storage::disk('public')->delete($article->image);
             }
-
-            $article->delete();
-
-            Cache::flush();
-
-            return response()->json(['message' => 'Artikel berhasil dihapus!'], 200);
-
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Gagal hapus: ' . $e->getMessage()], 500);
+            $article->image = $request->file('image')->store('articles', 'public');
         }
+
+        $article->title = $request->title;
+        $article->category = $request->category;
+        $article->summary = $request->summary;
+        $article->content = $request->content;
+        $article->tags = $request->tags;
+        
+        if ($request->has('status')) {
+            $article->status = $request->status;
+        }
+
+        $article->save();
+        Cache::flush();
+
+        return response()->json(['message' => 'Berita berhasil diperbarui!', 'data' => $article]);
     }
 
-    // --- FITUR KOMENTAR ---
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate(['status' => 'required|in:approved,rejected,pending,draft']);
+        $article = Article::findOrFail($id);
+        $article->update(['status' => $request->status]);
+        Cache::flush();
+        return response()->json(['message' => 'Status berhasil diubah']);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $article = Article::findOrFail($id);
+        
+        if ($article->user_id !== $request->user()->id && $request->user()->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        if ($article->image) {
+            Storage::disk('public')->delete($article->image);
+        }
+
+        $article->delete();
+        Cache::flush();
+        return response()->json(['message' => 'Artikel berhasil dihapus!']);
+    }
+
+    public function incrementView($id)
+    {
+        $article = Article::findOrFail($id);
+        $article->increment('views');
+        return response()->json(['views' => $article->views]);
+    }
+
     public function getComments($id)
     {
         $comments = Comment::where('article_id', $id)->with('user')->latest()->paginate(20);
@@ -202,12 +245,13 @@ class ArticleController extends Controller
         return response()->json(['message' => 'Komentar terhapus!']);
     }
 
-    // --- FITUR LIKE ---
     public function toggleLike(Request $request, $id)
     {
         $user = $request->user();
-        $like = ArticleLike::where('user_id', $user->id)->where('article_id', $id)->first();
+        if (!$user) return response()->json(['message' => 'Unauthenticated'], 401);
 
+        $like = ArticleLike::where('user_id', $user->id)->where('article_id', $id)->first();
+        
         if ($like) {
             $like->delete();
             $status = 'unliked';
@@ -216,9 +260,12 @@ class ArticleController extends Controller
             $status = 'liked';
         }
 
+        $likesCount = ArticleLike::where('article_id', $id)->count();
+
         return response()->json([
+            'message' => 'Success',
             'status' => $status,
-            'likes_count' => ArticleLike::where('article_id', $id)->count()
+            'likes_count' => $likesCount
         ]);
     }
 }

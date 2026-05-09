@@ -13,22 +13,19 @@ return new class extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            // Menghubungkan ke tabel users (siapa penulisnya)
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->string('slug')->unique();
             $table->string('category');
             $table->string('image')->nullable();
-            
-            // Kita pakai nama 'summary' agar sinkron dengan Controller dan React
             $table->text('summary')->nullable(); 
+            $table->longText('content'); 
+            $table->string('tags')->nullable();
             
-            $table->text('content');
+            // Menggunakan string agar fleksibel dan menghindari Error 1265
+            $table->string('status')->default('draft'); 
             
-            // Status berita: pending (nunggu admin), approved (terbit), rejected (ditolak)
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            
-            $table->text('tags')->nullable();
+            $table->integer('views')->default(0);
             $table->timestamps();
         });
     }

@@ -1,0 +1,157 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Models\Article;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+
+class ProfileController extends Controller
+{
+    public function index(Request $request)
+    {
+        try {
+            // 1. Ambil user yang sedang login
+            $user = $request->user();
+
+            if (!$user) {
+                return response()->json(['message' => 'User tidak ditemukan'], 401);
+            }
+
+            // 2. Ambil semua artikel user dan filter berdasarkan status
+            $allArticles = Article::where('user_id', $user->id)->get();
+
+            // PENTING: Gunakan string exact sesuai database Anda
+            $posts = $allArticles->where('status', 'approved')->values();
+            $drafts = $allArticles->where('status', 'draft')->values();
+            $pending = $allArticles->where('status', 'pending')->values();
+            $rejected = $allArticles->where('status', 'rejected')->values();
+
+            // 3. Load favorites (artikel yang di-like)
+            $favorites = $user->favorites()->get();
+
+            // 4. Siapkan data response
+            $data = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'bio' => $user->bio ?? '',
+                'profession' => $user->profession ?? '',
+                'schoolName' => $user->school_name ?? '',
+                'interests' => is_array($user->interests) ? $user->interests : [],
+                'avatar' => $user->avatar ? asset('storage/' . $user->avatar) : null,
+                
+                // List Artikel
+                'posts' => $this->formatArticles($posts),
+                'drafts' => $this->formatArticles($drafts),
+                'pending' => $this->formatArticles($pending),
+                'rejected' => $this->formatArticles($rejected),
+                'favorites' => $this->formatArticles($favorites),
+            ];
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error("Profile Index Error: " . $e->getMessage());
+            return response()->json([
+                'message' => 'Terjadi kesalahan pada server',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            // 1. Validasi input
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'bio' => 'nullable|string|max:500',
+                'profession' => 'nullable|string|max:100',
+                'schoolName' => 'nullable|string|max:100',
+                'interests' => 'nullable|array',
+                'avatarFile' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            ]);
+
+            $user = $request->user();
+
+            // 2. Update teks biasa
+            $user->name = $request->name;
+            $user->bio = $request->bio;
+            $user->profession = $request->profession;
+            $user->school_name = $request->schoolName; // Simpan ke snake_case DB
+            
+            // 3. Update interests (JSON)
+            if ($request->has('interests')) {
+                 $user->interests = $request->interests;
+            }
+            
+            // 4. Handle Upload Avatar
+            if ($request->hasFile('avatarFile')) {
+                // Hapus avatar lama jika ada
+                if ($user->avatar) {
+                    Storage::disk('public')->delete($user->avatar);
+                }
+                $path = $request->file('avatarFile')->store('avatars', 'public');
+                $user->avatar = $path;
+            }
+
+            $user->save();
+
+            // 5. Kirim ulang data profil terbaru setelah update
+            return $this->index($request);
+
+        } catch (\Exception $e) {
+            Log::error("Profile Update Error: " . $e->getMessage());
+            return response()->json(['message' => 'Gagal update profil', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Helper function untuk format array artikel
+     * DIPERBAIKI: Menggunakan foreach dengan continue agar error pada satu artikel tidak menghentikan semua.
+     */
+    private function formatArticles($articles)
+    {
+        // Cek jika kosong
+        if (!$articles || $articles->isEmpty()) {
+            return [];
+        }
+
+        // Gunakan foreach untuk safety
+        $formatted = [];
+        foreach ($articles as $article) {
+            // Skip jika object article tidak valid
+            if (!$article) continue;
+
+            try {
+                $formatted[] = [
+                    'id' => $article->id,
+                    'title' => $article->title ?? 'Tanpa Judul',
+                    'slug' => $article->slug ?? '',
+                    'category' => $article->category ?? 'Umum',
+                    // Cek gambar
+                    'image' => !empty($article->image) 
+                        ? (filter_var($article->image, FILTER_VALIDATE_URL) ? $article->image : asset('storage/' . $article->image)) 
+                        : null,
+                    'summary' => $article->summary ?? '',
+                    'content' => $article->content ?? '',
+                    'status' => $article->status,
+                    'createdAt' => $article->created_at,
+                    'updatedAt' => $article->updated_at,
+                ];
+            } catch (\Exception $e) {
+                // Jika ada error pada artikel tertentu, lewati saja (jangan blok semua)
+                continue;
+            }
+        }
+
+        // Kembalikan array (sudah otomatis ter-reset indexnya 0,1,2..)
+        return array_values($formatted);
+    }
+}

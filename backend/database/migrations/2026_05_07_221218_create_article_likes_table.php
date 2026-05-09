@@ -6,25 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('article_likes', function (Blueprint $table) {
             $table->id();
+            // Menghubungkan ke tabel users
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // Menghubungkan ke tabel articles
             $table->foreignId('article_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-            
-            // Biar satu user nggak bisa like berita yang sama berkali-kali
-            $table->unique(['user_id', 'article_id']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('article_likes');

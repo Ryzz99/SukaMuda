@@ -26,152 +26,190 @@ function Home() {
   }, [queryClient]);
 
   const { data: allArticles = [], isLoading: articleLoading } = useQuery({
-    queryKey: ['publicArticles'], 
+    queryKey: ['publicArticles'],
     queryFn: fetchArticles,
     staleTime: 1000 * 60 * 5,
   });
 
   const { data: trendingArticles = [], isLoading: trendingLoading } = useQuery({
-    queryKey: ['trendingArticles'], 
+    queryKey: ['trendingArticles'],
     queryFn: fetchTrending,
     staleTime: 1000 * 60 * 5,
   });
 
-  const formatCategory = (cat) => cat ? cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase() : "Umum";
+  const formatCategory = (cat) =>
+    cat ? cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase() : "Umum";
 
-  // --- FUNGSI RENDER UNTUK GRID BIASA ---
-  const renderCard = (article) => {
-    const imageUrl = article.image 
+  const getInitials = (name) => {
+    if (!name) return "?";
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+  };
+
+  const renderTrendingItem = (article, index) => {
+    const imageUrl = article.image
       ? (article.image.startsWith('http') ? article.image : `${baseUrl}/storage/${article.image}`)
-      : "https://via.placeholder.com/400x250?text=SukaMuda";
+      : "https://via.placeholder.com/150x100?text=SukaMuda";
+
+    const authorPhoto = article.user?.avatar || article.user?.profile_photo_url;
+    const authorName = article.user?.name || 'Anonim';
 
     return (
-      <Link className="article-card" key={article.id} to={`/article/${article.id}`}>
-        <div className="article-image-wrapper">
-          <img 
-            src={imageUrl} 
-            alt={article.title} 
-            loading="lazy" 
-            onError={(e) => { 
-              e.currentTarget.src = "https://via.placeholder.com/400x250?text=Image+Error"; 
-            }} 
-          />
-          <span className="card-badge">{formatCategory(article.category)}</span>
+      <Link className="trending-item" key={article.id} to={`/article/${article.id}`}>
+        <div className="trending-rank">
+          <span>{String(index + 1).padStart(2, '0')}</span>
         </div>
-        <div className="card-content">
-          <h3>{article.title}</h3>
-          <div className="card-meta">
-            <span className="author-name">{article.user?.name || 'Anonim'}</span>
-            <span className="dot-separator">•</span>
-            <span className="read-time">3 menit baca</span>
+
+        <div className="trending-thumb">
+          <img
+            src={imageUrl}
+            alt={article.title}
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.src = "https://via.placeholder.com/150x100?text=Image";
+            }}
+          />
+        </div>
+
+        <div className="trending-details">
+          <span className="tag-category">
+            {formatCategory(article.category)}
+          </span>
+
+          <h4>{article.title}</h4>
+
+          <div className="meta-info">
+            <div className="author-avatar-xs">
+              {authorPhoto ? (
+                <img src={authorPhoto} alt={authorName} />
+              ) : (
+                <span>{getInitials(authorName)}</span>
+              )}
+            </div>
+
+            <span>{authorName}</span>
           </div>
         </div>
       </Link>
     );
   };
 
-  // --- FUNGSI RENDER KHUSUS TRENDING (LIST STYLE) ---
-  const renderTrendingItem = (article, index) => {
-    const imageUrl = article.image 
+  const renderCard = (article, index) => {
+    const imageUrl = article.image
       ? (article.image.startsWith('http') ? article.image : `${baseUrl}/storage/${article.image}`)
-      : "https://via.placeholder.com/150x100?text=SukaMuda";
+      : "https://via.placeholder.com/600x400?text=SukaMuda";
+
+    const authorPhoto = article.user?.avatar || article.user?.profile_photo_url;
+    const authorName = article.user?.name || 'Anonim';
 
     return (
-      <Link className="trending-item" key={article.id} to={`/article/${article.id}`}>
-        <div className="trending-rank-wrapper">
-          <span className="trending-rank">{String(index + 1).padStart(2, '0')}</span>
-          <img 
-            src={imageUrl} 
-            alt={article.title} 
-            className="trending-img"
-            loading="lazy"
-            onError={(e) => { 
-              e.currentTarget.src = "https://via.placeholder.com/150x100?text=Image"; 
-            }}
-          />
+      <Link
+        className={`article-card card-index-${index}`}
+        key={article.id}
+        to={`/article/${article.id}`}
+      >
+        <div className="card-image">
+          <img src={imageUrl} alt={article.title} loading="lazy" />
+          <div className="card-image-overlay"></div>
+
+          <span className="card-badge">
+            {formatCategory(article.category)}
+          </span>
         </div>
-        <div className="trending-info">
-          <span className="trending-category">{formatCategory(article.category)}</span>
-          <h4>{article.title}</h4>
-          <p>Oleh: {article.user?.name || 'Anonim'}</p>
+
+        <div className="card-body">
+          <h3>{article.title}</h3>
+
+          <div className="card-footer">
+            <div className="author-info">
+              <div className="author-avatar">
+                {authorPhoto ? (
+                  <img src={authorPhoto} alt={authorName} />
+                ) : (
+                  <span>{getInitials(authorName)}</span>
+                )}
+              </div>
+
+              <span className="author-name">{authorName}</span>
+            </div>
+
+            <span className="read-time">3 min baca</span>
+          </div>
         </div>
       </Link>
     );
   };
 
-  // --- SKELETON LOADING ---
   const SkeletonCard = () => (
-    <div className="article-card skeleton-card">
-      <div className="skeleton" style={{ width: '100%', height: '180px', borderRadius: '0' }}></div>
-      <div className="card-content" style={{ padding: '15px' }}>
-        <div className="skeleton" style={{ width: '60%', height: '12px', marginBottom: '10px' }}></div>
-        <div className="skeleton" style={{ width: '100%', height: '16px', marginBottom: '8px' }}></div>
-        <div className="skeleton" style={{ width: '90%', height: '16px' }}></div>
+    <div className="article-card skeleton">
+      <div className="skeleton-img"></div>
+
+      <div className="card-body">
+        <div className="skeleton-line short"></div>
+        <div className="skeleton-line long"></div>
+        <div className="skeleton-line medium"></div>
       </div>
     </div>
   );
 
   const SkeletonTrending = () => (
-    <div className="trending-item skeleton-trending">
-      <div className="trending-rank-wrapper">
-        <div className="skeleton" style={{ width: '30px', height: '20px', borderRadius: '4px' }}></div>
-        <div className="skeleton" style={{ width: '100px', height: '75px', borderRadius: '6px' }}></div>
+    <div className="trending-item skeleton">
+      <div className="trending-rank">
+        <div className="skeleton-box"></div>
       </div>
-      <div className="trending-info">
-        <div className="skeleton" style={{ width: '60px', height: '12px', marginBottom: '8px' }}></div>
-        <div className="skeleton" style={{ width: '90%', height: '14px', marginBottom: '6px' }}></div>
-        <div className="skeleton" style={{ width: '70%', height: '14px' }}></div>
+
+      <div className="trending-thumb">
+        <div className="skeleton-img"></div>
+      </div>
+
+      <div className="trending-details">
+        <div className="skeleton-line short"></div>
+        <div className="skeleton-line long"></div>
       </div>
     </div>
   );
 
-  // Trick agar ticker text berjalan mulus tanpa putus
-  const tickerData = trendingArticles.length > 0 ? [...trendingArticles, ...trendingArticles] : [];
+  const top5Trending = trendingLoading
+    ? []
+    : trendingArticles.slice(0, 5);
 
   return (
     <div className="home-container">
-      
-      {/* === BREAKING NEWS TICKER === */}
-      {trendingArticles.length > 0 && (
-        <div className="breaking-news-bar">
-          <span className="breaking-label">Trending</span>
-          <div className="ticker-wrapper">
-            <div className="ticker-content">
-              {tickerData.map((a, i) => (
-                <Link key={`ticker-${i}`} to={`/article/${a.id}`} className="ticker-item">
-                  {a.title}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* === TRENDING TERPOPULER (SEMUA MUNCUL) === */}
-      <section className="home-section trending-section">
+      {/* Section Trending */}
+      <section className="section-trending">
         <div className="section-header">
-          <div className="section-title-wrapper">
-            <div className="section-bar" style={{ background: '#ff9800' }}></div>
+          <div className="header-left">
+            <div className="bar-orange"></div>
             <h2>Trending Hari Ini</h2>
           </div>
-          <span className="trending-total">{trendingArticles.length} Berita</span>
+
+          <div className="trending-count">
+            <span>
+              Top {trendingLoading ? '...' : top5Trending.length} Berita
+            </span>
+          </div>
         </div>
 
-        <div className="trending-list">
+        <div className="trending-grid">
           {trendingLoading ? (
-            Array(5).fill(0).map((_, i) => <SkeletonTrending key={i} />)
+            Array(5).fill(0).map((_, i) => (
+              <SkeletonTrending key={i} />
+            ))
           ) : (
-            trendingArticles.map((article, index) => renderTrendingItem(article, index))
+            top5Trending.map((article, index) =>
+              renderTrendingItem(article, index)
+            )
           )}
         </div>
       </section>
 
-      {/* === KATEGORI BERITA TERKINI === */}
+      {/* Section Categories */}
       {categoryGroups.map((group) => {
         const groupArticles = allArticles
           .filter((item) =>
             group.categorySlugs.some(
-              (slug) => slug.toLowerCase() === item.category.toLowerCase()
+              (slug) =>
+                slug.toLowerCase() === item.category.toLowerCase()
             )
           )
           .slice(0, 6);
@@ -179,31 +217,41 @@ function Home() {
         if (groupArticles.length === 0 && !articleLoading) return null;
 
         return (
-          <section key={group.slug} className="home-section">
+          <section key={group.slug} className="section-category">
             <div className="section-header">
-              <div className="section-title-wrapper">
-                <div className="section-bar"></div>
+              <div className="header-left">
+                <div className="bar-red"></div>
                 <h2>{group.label}</h2>
               </div>
-              <Link className="section-link" to={`/category/${group.slug}`}>
-                Lihat Semua <span className="arrow-right">→</span>
+
+              <Link
+                to={`/category/${group.slug}`}
+                className="view-all"
+              >
+                Lihat Semua
+                <span className="icon-arrow">→</span>
               </Link>
             </div>
 
-            <div className="article-grid">
+            <div className="articles-grid">
               {articleLoading ? (
-                Array(6).fill(0).map((_, i) => <SkeletonCard key={i} />)
+                Array(6).fill(0).map((_, i) => (
+                  <SkeletonCard key={i} />
+                ))
               ) : (
-                groupArticles.map(renderCard)
+                groupArticles.map((article, index) =>
+                  renderCard(article, index)
+                )
               )}
             </div>
           </section>
         );
       })}
 
+      {/* Empty State */}
       {allArticles.length === 0 && !articleLoading && (
         <div className="empty-state">
-          <p>Belum ada berita yang diterbitkan.</p>
+          <p>Belum ada artikel yang diterbitkan saat ini.</p>
         </div>
       )}
     </div>

@@ -1,0 +1,93 @@
+.ad-slot {
+  border: 2px dashed #d4dce8;
+  background: linear-gradient(135deg, #f9fafb 0%, #f2f5fa 100%);
+  color: #6b7280;
+  border-radius: 16px;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  font-size: 13px;
+}
+
+.ad-slot--top {
+  padding: 24px 16px;
+  margin-bottom: 24px;
+}
+
+.ad-slot--middle {
+  padding: 24px 16px;
+  margin: 24px 0;
+}
+
+.ad-slot--bottom {
+  padding: 24px 16px;
+  margin-top: 40px;
+}
+
+.ad-slot--rail-left,
+.ad-slot--rail-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120px);
+  padding: 14px;
+  position: sticky;
+  top: 18px;
+}
+
+@media (max-width: 768px) {
+  .ad-slot--top {
+    padding: 20px 12px;
+    margin-bottom: 20px;
+  }
+
+  .ad-slot--middle {
+    padding: 20px 12px;
+    margin: 20px 0;
+  }
+
+  .ad-slot--bottom {
+    padding: 20px 12px;
+    margin-top: 30px;
+  }
+
+  .ad-slot--rail-left,
+  .ad-slot--rail-right {
+    position: static;
+    min-height: 80px;
+    width: 100%;
+    padding: 12px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .ad-slot {
+    font-size: 12px;
+  }
+
+  .ad-slot--top,
+  .ad-slot--middle,
+  .ad-slot--bottom {
+    padding: 16px 10px;
+  }
+
+  .ad-slot--top {
+    margin-bottom: 16px;
+  }
+
+  .ad-slot--middle {
+    margin: 16px 0;
+  }
+
+  .ad-slot--bottom {
+    margin-top: 20px;
+  }
+
+  .ad-slot--rail-left,
+  .ad-slot--rail-right {
+    min-height: 64px;
+    padding: 10px;
+  }
+}

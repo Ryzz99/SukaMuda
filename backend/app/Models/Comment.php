@@ -11,7 +11,7 @@ class Comment extends Model
 
     // Kolom yang boleh diisi lewat React
     protected $fillable = ['article_id', 'user_id', 'body'];
-
+    
     // Relasi: Setiap komentar pasti punya penulis (User)
     public function user()
     {

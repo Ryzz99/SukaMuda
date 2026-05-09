@@ -1,13 +1,13 @@
 /* ================= HALAMAN UTAMA & CONTAINER ================= */
 .menulis-form-page {
-  background: #f8fafc;
+  background: #ffffff;
   min-height: 100vh;
 }
 
 .menulis-form-page .content {
-  max-width: 880px;
+  max-width: 860px;
   margin: 0 auto;
-  padding: 40px 24px 100px;
+  padding: 50px 20px 80px;
 }
 
 .write-form {
@@ -15,11 +15,6 @@
   flex-direction: column;
   gap: 28px;
   color: #222222;
-  background: #ffffff;
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
-  border: 1px solid #f0f0f0;
 }
 
 /* ================= HEADER ================= */
@@ -28,82 +23,55 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  padding-bottom: 24px;
-  border-bottom: 2px solid #111;
 }
 
 .back-link-btn {
   background: none;
   border: none;
   cursor: pointer;
-  color: #555;
-  padding: 8px;
-  border-radius: 8px;
+  font-size: 22px;
+  color: #333;
+  padding: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
+  transition: color 0.2s;
 }
 
 .back-link-btn:hover {
-  background: #f3f4f6;
-  color: #111;
+  color: #1e76d0;
 }
 
 .write-heading {
   margin: 0;
   text-align: center;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 22px;
-  letter-spacing: 4px;
-  font-weight: 900;
+  font-size: 26px;
+  letter-spacing: 2px;
+  font-weight: 800;
   color: #111;
-}
-
-.header-status-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #f59e0b;
 }
 
 /* ================= FORM INPUT GRID ================= */
 .form-row {
   display: grid;
-  grid-template-columns: 140px 1fr;
-  align-items: start;
-  gap: 16px;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 20px;
 }
 
 .form-label {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
-  color: #374151;
+  color: #444;
   text-align: left;
-  padding-top: 13px;
 }
 
 .form-input {
-  height: 48px;
-  background: #ffffff;
-  color: #111;
-  border: 1.5px solid #e5e7eb;
+  height: 46px;
+  background: #f8f9fa;
+  color: #222;
+  border: 1px solid #e1e4e8;
   border-radius: 10px;
   padding: 0 16px;
-  font-family: system-ui, -apple-system, sans-serif;
   font-size: 15px;
   width: 100%;
   box-sizing: border-box;
@@ -112,68 +80,30 @@
 
 .form-input:focus {
   outline: none;
-  border-color: #111;
+  border-color: #1e76d0;
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+  box-shadow: 0 0 0 3px rgba(30, 118, 208, 0.1);
 }
 
-.form-input::placeholder {
-  color: #9ca3af;
-}
-
-/* Error States */
-.has-error .form-input,
-.has-error .form-select,
-.has-error .editor-wrapper {
-  border-color: #ef4444 !important;
-}
-
-.error-text {
-  grid-column: 2;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 12px;
-  color: #dc2626;
-  margin-top: 4px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.error-text::before {
-  content: '!';
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #fef2f2;
-  color: #dc2626;
-  font-size: 10px;
-  font-weight: 800;
-  flex-shrink: 0;
-}
-
-.error-text-img {
-  grid-column: 1 / -1;
-  justify-self: start;
-  margin-left: 0;
-}
-
-/* ================= DROPDOWN CATEGORY ================= */
+/* ================= DROPDOWN CATEGORY (FIX PANAH & KUNING) ================= */
 .form-select {
-  height: 48px;
+  max-width: 240px;
+  height: 46px;
   background-color: #111111;
   color: white;
   border: none;
   border-radius: 10px;
   padding: 0 16px;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
   cursor: pointer;
+  
+  /* Mengembalikan panah dropdown bawaan sistem */
+  -webkit-appearance: menulist;
+  -moz-appearance: menulist;
   appearance: menulist;
-  color-scheme: light;
+  
+  /* Mencegah warna kuning/electro bawaan browser saat list dibuka */
+  color-scheme: light; 
 }
 
 .form-select:focus {
@@ -182,204 +112,123 @@
   outline: none;
 }
 
+/* Memastikan list pilihan tetap bersih putih */
 .form-select option {
   background-color: #ffffff !important;
   color: #111111 !important;
-  font-weight: 400;
 }
 
-/* ================= THUMBNAIL DROPZONE ================= */
-.form-row-thumbnail {
-  grid-template-columns: 140px 1fr;
-}
-
-.thumbnail-dropzone {
-  width: 100%;
-  min-height: 200px;
-  border: 2px dashed #d1d5db;
-  border-radius: 12px;
-  background: #f9fafb;
+/* ================= THUMBNAIL ================= */
+.thumbnail-input {
   display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.thumbnail-dropzone:hover {
-  border-color: #9ca3af;
-  background: #f3f4f6;
-}
-
-.thumbnail-dropzone.drag-over {
-  border-color: #111;
-  background: #e5e7eb;
-  transform: scale(1.01);
-}
-
-.preview-container {
+  gap: 24px;
   width: 100%;
-  height: 220px;
-  position: relative;
+}
+
+input[type="file"].form-input {
+  height: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  max-width: 260px;
+  font-size: 14px;
+  color: #555;
+}
+
+input[type="file"].form-input:focus {
+  box-shadow: none;
+  border: none;
 }
 
 .thumbnail-preview {
-  width: 100%;
-  height: 100%;
+  width: 130px;
+  height: 85px;
+  border-radius: 10px;
   object-fit: cover;
-  border-radius: 10px;
+  border: 1px solid #e1e4e8;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
-.preview-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  opacity: 0;
-  transition: opacity 0.2s;
-  border-radius: 10px;
-}
-
-.preview-container:hover .preview-overlay {
-  opacity: 1;
-}
-
-.dropzone-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  color: #9ca3af;
-  text-align: center;
-  padding: 20px;
-}
-
-.dropzone-placeholder p {
-  margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.dropzone-placeholder span {
-  font-family: system-ui, -apple-system, sans-serif;
+.thumbnail-caption-hint {
+  margin-top: 8px;
   font-size: 12px;
-  color: #bbb;
-  background: #fff;
-  padding: 4px 10px;
-  border-radius: 20px;
-  border: 1px solid #eee;
+  color: #6b7280;
 }
 
 /* ================= QUILL EDITOR ================= */
 .editor-wrapper {
-  border: 1.5px solid #e5e7eb;
+  margin: 8px 0;
+  border: 1px solid #e1e4e8;
   border-radius: 12px;
   overflow: hidden;
   background: #ffffff;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s;
 }
 
 .editor-wrapper:focus-within {
-  border-color: #111;
-  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+  border-color: #1e76d0;
 }
 
-.editor-label-row {
-  padding: 12px 16px 0;
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafbfc;
+  flex-wrap: wrap;
 }
 
-/* Toolbar Styling */
+.editor-body {
+  background: white;
+  min-height: 280px; 
+}
+
 .menulis-form-page .ql-toolbar.ql-snow {
   border: none !important;
-  padding: 8px 12px !important;
-  background: #fafbfc !important;
-  border-bottom: 1px solid #f0f0f0 !important;
-}
-
-.ql-divider {
-  display: inline-block;
-  width: 1px;
-  height: 20px;
-  background: #e5e7eb;
-  margin: 0 6px;
-  vertical-align: middle;
+  padding: 0;
+  color: black;
 }
 
 .menulis-form-page .ql-container.ql-snow {
   border: none !important;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: inherit;
 }
 
 .menulis-form-page .ql-editor {
-  min-height: 350px;
-  padding: 24px;
-  font-size: 17px;
-  line-height: 1.8;
+  min-height: 280px;
+  padding: 20px;
+  font-size: 16px;
+  line-height: 1.7;
   color: #222;
 }
 
-.menulis-form-page .ql-editor.ql-blank::before {
-  font-style: normal;
-  color: #bbb;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-
-.menulis-form-page .ql-snow .ql-formats {
-  margin-right: 4px !important;
-}
-
-.menulis-form-page .ql-toolbar button,
-.menulis-form-page .ql-toolbar .ql-picker-label {
+.menulis-form-page .ql-toolbar button {
   border: none !important;
   background: transparent !important;
-  border-radius: 6px !important;
-  width: 32px !important;
-  height: 32px !important;
-  display: inline-flex !important;
+  border-radius: 8px !important;
+  width: 34px;
+  height: 34px;
+  display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 !important;
-  transition: all 0.15s;
-  color: #555 !important;
+  transition: background 0.15s;
 }
 
-.menulis-form-page .ql-toolbar button svg {
-  width: 16px !important;
-  height: 16px !important;
+.menulis-form-page .ql-toolbar button:hover {
+  background: #e9ecef !important;
 }
 
-.menulis-form-page .ql-toolbar button:hover,
-.menulis-form-page .ql-toolbar .ql-picker-label:hover {
-  background: #f3f4f6 !important;
-  color: #111 !important;
-}
-
-.menulis-form-page .ql-toolbar button.ql-active,
-.menulis-form-page .ql-toolbar .ql-picker-label.ql-active {
-  background: #111 !important;
-  color: #fff !important;
+.menulis-form-page .ql-toolbar button.ql-active {
+  background: #dbeafe !important;
+  color: #1e76d0;
 }
 
 .menulis-form-page .ql-toolbar button.ql-undo,
 .menulis-form-page .ql-toolbar button.ql-redo {
   width: auto !important;
-  padding: 0 4px !important;
-}
-
-.menulis-form-page .ql-toolbar button.ql-undo svg,
-.menulis-form-page .ql-toolbar button.ql-redo svg {
-  width: 15px !important;
-  height: 15px !important;
+  padding: 0 8px !important;
 }
 
 /* ================= ACTION BUTTONS ================= */
@@ -387,78 +236,76 @@
   display: flex;
   justify-content: flex-end;
   gap: 14px;
-  margin-top: 16px;
-  padding-top: 24px;
+  margin-top: 12px;
+  padding-top: 20px;
   border-top: 1px solid #f0f0f0;
 }
 
 .btn-draft {
   background: #ffffff;
-  color: #374151;
-  border: 1.5px solid #d1d5db;
+  color: #555;
+  border: 1px solid #d1d5db;
   border-radius: 10px;
-  padding: 12px 24px;
-  font-family: system-ui, -apple-system, sans-serif;
+  padding: 10px 28px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
   transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .btn-draft:hover {
-  background: #f9fafb;
+  background: #f3f4f6;
   border-color: #9ca3af;
 }
 
 .btn-submit {
-  background: #111;
+  background: #1e76d0;
   color: #ffffff;
   border: none;
   border-radius: 10px;
-  padding: 12px 28px;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-weight: 700;
-  font-size: 14px;
+  padding: 10px 32px;
+  font-weight: 600;
+  font-size: 15px;
   cursor: pointer;
   transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  box-shadow: 0 2px 4px rgba(30, 118, 208, 0.2);
 }
 
 .btn-submit:hover {
-  background: #333;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background: #1662ad;
+  box-shadow: 0 4px 8px rgba(30, 118, 208, 0.3);
 }
 
-.btn-submit:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+/* Container pembungkus link (Video & Audio) */
+.form-input-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 0 16px;
+  height: 44px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.btn-loading-spinner {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
+.form-input-no-border {
+  border: none !important;
+  background: transparent !important;
+  flex: 1;
+  height: 100%;
+  font-size: 16px;
+  outline: none;
+  color: black;
+  padding: 0;
 }
 
-.btn-loading-spinner.light {
-  border-color: rgba(0,0,0,0.1);
-  border-top-color: #111;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.link-icon-svg {
+  width: 20px;
+  height: 20px;
+  color: #333;
+  flex-shrink: 0;
 }
 
 /* ================= MODAL POPUP ================= */
@@ -468,56 +315,42 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.2s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  backdrop-filter: blur(3px);
 }
 
 .modal-container {
   background: #ffffff;
-  padding: 40px;
-  border-radius: 20px;
+  padding: 36px 40px;
+  border-radius: 16px;
   max-width: 420px;
   width: 90%;
   text-align: center;
-  box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-  animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+  animation: modalSlideIn 0.25s ease-out;
 }
 
 @keyframes modalSlideIn {
-  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.modal-icon {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-}
-
 .modal-title {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
   color: #111;
-  margin: 0 0 12px 0;
+  margin: 0 0 10px 0;
 }
 
 .modal-subtitle {
-  font-family: system-ui, -apple-system, sans-serif;
-  font-size: 14px;
-  color: #6b7280;
-  margin: 0 0 32px 0;
-  line-height: 1.6;
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 28px 0;
+  line-height: 1.5;
 }
 
 .modal-buttons {
@@ -530,9 +363,8 @@
   background: #f3f4f6;
   color: #444;
   border: none;
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-family: system-ui, -apple-system, sans-serif;
+  padding: 10px 24px;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
@@ -543,43 +375,61 @@
   background: #e5e7eb;
 }
 
-.btn-konfirmasi {
+.btn-konfirmasi-hapus {
+  background: #1e76d0;
   color: white;
   border: none;
-  padding: 12px 28px;
-  border-radius: 10px;
-  font-family: system-ui, -apple-system, sans-serif;
-  font-weight: 700;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  transition: background 0.2s;
 }
 
-.btn-publish-confirm {
-  background: #10b981;
+.btn-konfirmasi-hapus:hover {
+  background: #1662ad;
 }
 
-.btn-publish-confirm:hover {
-  background: #059669;
-}
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .menulis-form-page .content { 
+    padding: 30px 16px 60px; 
+  }
+  
+  .form-row { 
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
 
-.btn-draft-confirm {
-  background: #f59e0b;
-}
+  .form-label {
+    font-size: 14px;
+  }
+  
+  .form-select { 
+    max-width: 100%; 
+  }
 
-.btn-draft-confirm:hover {
-  background: #d97706;
-}
+  .thumbnail-input {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 
-.btn-konfirmasi:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
+  input[type="file"].form-input {
+    max-width: 100%;
+  }
 
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-draft, .btn-submit {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   .menulis-form-page .content {

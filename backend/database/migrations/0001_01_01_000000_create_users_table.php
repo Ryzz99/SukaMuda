@@ -17,6 +17,16 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            
+            // --- Tambahan Kolom Profil Sukamuda ---
+            $table->string('role')->default('user');
+            $table->string('avatar')->nullable();
+            $table->text('bio')->nullable();
+            $table->string('profession')->nullable();
+            $table->string('school_name')->nullable();
+            $table->json('interests')->nullable();
+            // --------------------------------------
+
             $table->rememberToken();
             $table->timestamps();
         });
