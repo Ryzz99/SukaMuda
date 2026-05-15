@@ -7,25 +7,25 @@ import axios from '../utils/axiosConfig';
 import { useQueryClient } from '@tanstack/react-query';
 
 const categories = [
-  { slug: 'school',    label: 'School' },
-  { slug: 'college',   label: 'College' },
-  { slug: 'general',   label: 'General' },
-  { slug: 'style',     label: 'Style' },
-  { slug: 'culinary',  label: 'Culinary' },
+  { slug: 'school', label: 'School' },
+  { slug: 'college', label: 'College' },
+  { slug: 'general', label: 'General' },
+  { slug: 'style', label: 'Style' },
+  { slug: 'culinary', label: 'Culinary' },
   { slug: 'traveling', label: 'Traveling' },
-  { slug: 'sport',     label: 'Sport & E-Sport' },
-  { slug: 'music',     label: 'Music & Film' },
-  { slug: 'otomotif',  label: 'Otomotif' },
-  { slug: 'science',   label: 'Science' },
-  { slug: 'health',    label: 'Health' },
-  { slug: 'tech',      label: 'Tech' },
+  { slug: 'sport', label: 'Sport & E-Sport' },
+  { slug: 'music', label: 'Music & Film' },
+  { slug: 'otomotif', label: 'Otomotif' },
+  { slug: 'science', label: 'Science' },
+  { slug: 'health', label: 'Health' },
+  { slug: 'tech', label: 'Tech' },
 ];
 
 const initialState = {
-  title:            "",
-  category:         "",
-  teaser:           "",
-  tags:             "",
+  title: "",
+  category: "",
+  teaser: "",
+  tags: "",
   thumbnailCaption: "", // ← ditambahkan dari kode 1
 };
 
@@ -39,22 +39,23 @@ function formReducer(state, action) {
 }
 
 function Write() {
-  const navigate     = useNavigate();
-  const location     = useLocation();
-  const editorRef    = useRef(null);
-  const quillRef     = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const editorRef = useRef(null);
+  const quillRef = useRef(null);
   const fileInputRef = useRef(null);
-  const queryClient  = useQueryClient();
+  const queryClient = useQueryClient();
 
   const editData = location.state?.draft;
+  const returnPath = location.state?.returnPath || '/profile';
 
-  const [showModal, setShowModal]               = useState(false);
-  const [modalType, setModalType]               = useState("publish");
-  const [form, dispatch]                        = useReducer(formReducer, initialState);
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState("publish");
+  const [form, dispatch] = useReducer(formReducer, initialState);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
-  const [thumbnailFile, setThumbnailFile]       = useState(null);
-  const [loading, setLoading]                   = useState(false);
-  const [errors, setErrors]                     = useState({});
+  const [thumbnailFile, setThumbnailFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (!quillRef.current) {
@@ -75,11 +76,11 @@ function Write() {
     }
 
     if (editData) {
-      dispatch({ type: 'SET_FIELD', field: 'title',            value: editData.title    || "" });
-      dispatch({ type: 'SET_FIELD', field: 'category',         value: editData.category || "" });
-      dispatch({ type: 'SET_FIELD', field: 'teaser',           value: editData.summary || editData.teaser || "" });
-      dispatch({ type: 'SET_FIELD', field: 'tags',             value: editData.tags    || "" });
-      dispatch({ type: 'SET_FIELD', field: 'thumbnailCaption', value: editData.thumbnailCaption || "" }); // ← dari kode 1
+      dispatch({ type: 'SET_FIELD', field: 'title', value: editData.title || "" });
+      dispatch({ type: 'SET_FIELD', field: 'category', value: editData.category || "" });
+      dispatch({ type: 'SET_FIELD', field: 'teaser', value: editData.summary || editData.teaser || "" });
+      dispatch({ type: 'SET_FIELD', field: 'tags', value: editData.tags || "" });
+      dispatch({ type: 'SET_FIELD', field: 'thumbnailCaption', value: editData.image_caption || editData.thumbnailCaption || "" });
 
       if (editData.image) setThumbnailPreview(editData.image);
       if (quillRef.current && editData.content) {
@@ -134,15 +135,20 @@ function Write() {
 
     setLoading(true);
     const contentHtml = quillRef.current?.root?.innerHTML || "";
-    const formData    = new FormData();
+    const formData = new FormData();
 
-    formData.append('title',            form.title);
-    formData.append('category',         form.category);
-    formData.append('content',          contentHtml);
-    formData.append('summary',          form.teaser);
-    formData.append('tags',             form.tags);
+    formData.append('title', form.title);
+    formData.append('category', form.category);
+    formData.append('content', contentHtml);
+    formData.append('summary', form.teaser);
+    formData.append('tags', form.tags);
+    formData.append('image_caption', form.thumbnailCaption);
     formData.append('thumbnailCaption', form.thumbnailCaption); // ← dari kode 1
-    formData.append('status',           modalType === 'draft' ? 'draft' : 'review');
+    if (modalType === 'draft') {
+      formData.append('status', 'draft');
+    } else if (!editData?.id) {
+      formData.append('status', 'review');
+    }
     if (thumbnailFile) formData.append('image', thumbnailFile);
     if (editData?.id) {
       formData.append('id', editData.id);
@@ -150,7 +156,7 @@ function Write() {
     }
 
     try {
-      const url      = editData?.id ? `/api/articles/${editData.id}` : '/api/articles';
+      const url = editData?.id ? `/api/articles/${editData.id}` : '/api/articles';
       const response = await axios.post(url, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -158,12 +164,16 @@ function Write() {
       if (response.status === 201 || response.status === 200) {
         queryClient.invalidateQueries(['publicArticles']);
         queryClient.invalidateQueries(['userArticles']);
-        navigate(modalType === 'draft' ? "/profile" : "/write-success");
+        if (editData?.id) {
+          navigate(returnPath);
+        } else {
+          navigate(modalType === 'draft' ? "/profile" : "/write-success");
+        }
       }
     } catch (error) {
       console.error("Gagal kirim ke database:", error.response?.data);
       if (error.response?.data?.errors) {
-        const apiErrors       = error.response.data.errors;
+        const apiErrors = error.response.data.errors;
         const formattedErrors = {};
         for (let key in apiErrors) formattedErrors[key] = apiErrors[key][0];
         setErrors(formattedErrors);
@@ -188,7 +198,7 @@ function Write() {
 
           {/* Header */}
           <div className="write-header">
-            <button className="back-link-btn" onClick={() => navigate('/profile')}>
+            <button className="back-link-btn" onClick={() => navigate(returnPath)}>
               <span className="back-icon"> ← </span>
             </button>
             <h2 className="write-heading">WRITE</h2>
@@ -224,22 +234,67 @@ function Write() {
           </div>
 
           {/* Thumbnail */}
-          <div className="form-row">
-            <label className="form-label">Thumbnail</label>
-            <div className="thumbnail-input">
-              <input
-                ref={fileInputRef}
-                className="form-input"
-                type="file"
-                accept="image/*"
-                onChange={handleThumbnailChange}
-              />
-              {thumbnailPreview && (
-                <img className="thumbnail-preview" src={thumbnailPreview} alt="Preview" />
-              )}
-            </div>
-            {errors.image && <small style={{ color: 'red', marginTop: 4, display: 'block' }}>{errors.image}</small>}
-          </div>
+<div className="form-row">
+  <label className="form-label">Thumbnail</label>
+
+  <div className="thumbnail-upload-row">
+    
+    {/* Input Upload / Box Dasar */}
+    <div
+      className="thumbnail-drop-mini"
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={(e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files?.[0];
+        if (file && file.type.startsWith("image/")) {
+          processFile(file);
+        }
+      }}
+      onClick={() => fileInputRef.current?.click()}
+    >
+      <input
+        ref={fileInputRef}
+        className="hidden-file-input"
+        type="file"
+        accept="image/*"
+        onChange={handleThumbnailChange}
+      />
+      <span>Choose File</span>
+    </div>
+
+    {/* Preview Box - Akan menimpa box dasar jika ada gambar */}
+    {thumbnailPreview && (
+      <div className="thumbnail-preview-box">
+        <img
+          className="thumbnail-preview-mini"
+          src={thumbnailPreview}
+          alt="Preview"
+        />
+
+        <button
+          type="button"
+          className="remove-thumbnail-btn"
+          onClick={(e) => {
+            e.stopPropagation(); // Mencegah click trigger ke input file
+            setThumbnailPreview(null);
+            setThumbnailFile(null);
+            if (fileInputRef.current) {
+              fileInputRef.current.value = "";
+            }
+          }}
+        >
+          ×
+        </button>
+      </div>
+    )}
+  </div>
+
+  {errors.image && (
+    <small style={{ color: "red", marginTop: 4, display: "block" }}>
+      {errors.image}
+    </small>
+  )}
+</div>
 
           {/* Caption Thumbnail — ditambahkan dari kode 1 */}
           <div className="form-row">
@@ -264,17 +319,17 @@ function Write() {
               <button className="ql-redo" type="button">
                 <svg viewBox="0 0 18 18"><polygon className="ql-fill ql-stroke" points="12 10 14 12 16 10 12 10"></polygon><path className="ql-stroke" d="M12,10a4,4,0,1,0-1.5,3.1"></path></svg>
               </button>
-              <button className="ql-bold"       type="button" />
-              <button className="ql-italic"     type="button" />
-              <button className="ql-strike"     type="button" />
-              <button className="ql-underline"  type="button" />
+              <button className="ql-bold" type="button" />
+              <button className="ql-italic" type="button" />
+              <button className="ql-strike" type="button" />
+              <button className="ql-underline" type="button" />
               <button className="ql-blockquote" type="button" />
               <button className="ql-list" value="ordered" type="button" />
-              <button className="ql-list" value="bullet"  type="button" />
-              <button className="ql-align" value=""       type="button" />
+              <button className="ql-list" value="bullet" type="button" />
+              <button className="ql-align" value="" type="button" />
               <button className="ql-align" value="center" type="button" />
-              <button className="ql-align" value="right"  type="button" />
-              <button className="ql-link"  type="button" />
+              <button className="ql-align" value="right" type="button" />
+              <button className="ql-link" type="button" />
               <button className="ql-image" type="button" />
             </div>
             <div ref={editorRef} className="editor-body" />
@@ -306,7 +361,7 @@ function Write() {
 
           {/* Action buttons */}
           <div className="form-actions">
-            <button className="btn-draft"  type="button" onClick={() => openModal('draft')}   disabled={loading}>Draft</button>
+            <button className="btn-draft" type="button" onClick={() => openModal('draft')} disabled={loading}>Draft</button>
             <button className="btn-submit" type="button" onClick={() => openModal('publish')} disabled={loading}>
               {loading ? 'Mengirim...' : 'Kirim'}
             </button>

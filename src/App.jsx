@@ -21,6 +21,8 @@ import Rules from './pages/Rules';
 import Terms from './pages/Terms';
 import Help from './pages/Help'; 
 import ArticleDetail from './pages/ArticleDetail';
+import FAQ from './pages/FAQ.jsx';
+import PublicProfile from './pages/PublicProfile';
 
 // IMPORT HALAMAN ADMIN & SEARCH
 import AdminDashboard from './pages/AdminDashboard';
@@ -59,6 +61,7 @@ function App() {
           />
 
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/user/:userId" element={<PublicProfile />} />
           <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
           <Route path="/write" element={<ProtectedRoute><Write /></ProtectedRoute>} />
           <Route path="/write-success" element={<ProtectedRoute><WriteSuccess /></ProtectedRoute>} />
@@ -66,6 +69,7 @@ function App() {
           <Route path="/rules" element={<Rules />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/faq" element={<FAQ />} />
         </Routes>
 
         <Footer /> 

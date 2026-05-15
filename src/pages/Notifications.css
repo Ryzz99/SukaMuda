@@ -44,16 +44,54 @@
 
 .notif-row-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 15px 20px;
   background-color: #f9f9f9;
   border-radius: 15px;
   transition: 0.2s ease;
   cursor: pointer;
+  border-left: 4px solid #ddd;
+  position: relative;
+}
+
+.notif-row-item.unread {
+  background-color: #f0f7ff;
+  border-left-color: #3498db;
+}
+
+.notif-row-item.notif-approved {
+  border-left-color: #27ae60;
+}
+
+.notif-row-item.notif-approved.unread {
+  background-color: #f0fdf4;
+}
+
+.notif-row-item.notif-rejected {
+  border-left-color: #e74c3c;
+}
+
+.notif-row-item.notif-rejected.unread {
+  background-color: #fef2f2;
+}
+
+.notif-row-item.notif-liked {
+  border-left-color: #e91e63;
+}
+
+.notif-row-item.notif-liked.unread {
+  background-color: #fdf2f8;
+}
+
+.notif-row-item.notif-pending {
+  border-left-color: #f39c12;
+}
+
+.notif-row-item.notif-pending.unread {
+  background-color: #fffbf0;
 }
 
 .notif-row-item:hover {
-  background-color: #f1f1f1;
   transform: translateX(5px);
 }
 
@@ -67,6 +105,27 @@
   align-items: center;
   font-size: 22px;
   margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.notif-avatar-circle.article_approved {
+  background-color: #d4edda;
+  color: #27ae60;
+}
+
+.notif-avatar-circle.article_rejected {
+  background-color: #f8d7da;
+  color: #e74c3c;
+}
+
+.notif-avatar-circle.article_liked {
+  background-color: #f8d7da;
+  color: #e91e63;
+}
+
+.notif-avatar-circle.article_pending {
+  background-color: #fff3cd;
+  color: #f39c12;
 }
 
 .notif-bubble-box {
@@ -75,7 +134,118 @@
   color: #333;
 }
 
-.notif-note-icon {
+.notif-message {
+  margin: 0 0 8px 0;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.4;
+}
+
+.notif-rejection-reason {
+  margin: 10px 0 8px 0;
+  padding: 10px 12px;
+  background-color: #fee;
+  border-left: 3px solid #e74c3c;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #d9534f;
+}
+
+.notif-rejection-reason strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #c0392b;
+}
+
+.notif-time {
+  font-size: 12px;
+  color: #999;
+  display: block;
+  margin-top: 8px;
+}
+
+.notif-delete-btn {
+  background: none;
+  border: none;
   font-size: 18px;
-  color: #bbb;
+  color: #ccc;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 4px;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.notif-delete-btn:hover {
+  color: #e74c3c;
+}
+
+/* Loading & Error States */
+.notif-loading,
+.notif-error,
+.notif-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.notif-loading p,
+.notif-error p,
+.notif-empty p {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+.btn-retry {
+  margin-top: 16px;
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-retry:hover {
+  background-color: #2980b9;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .notif-page-wrapper {
+    padding: 20px 3%;
+  }
+
+  .notif-page-title {
+    font-size: 22px;
+  }
+
+  .notif-row-item {
+    padding: 12px 15px;
+  }
+
+  .notif-avatar-circle {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    margin-right: 12px;
+  }
+
+  .notif-bubble-box {
+    font-size: 14px;
+  }
+
+  .notif-message {
+    font-size: 13px;
+  }
+
+  .notif-rejection-reason {
+    font-size: 12px;
+  }
 }

@@ -18,7 +18,7 @@
   width: 32px;
   height: 32px;
   border: 3px solid #eaeaea;
-  border-top-color: #d83a34;
+  border-top-color: black;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
@@ -50,7 +50,7 @@
 
 .error-container h2 { font-size: 24px; margin: 0; color: #222; }
 .error-container p { color: #777; margin: 0; font-size: 15px; }
-.error-container a { color: #d83a34; font-weight: 600; text-decoration: none; margin-top: 8px; font-size: 15px; }
+.error-container a { color: black; font-weight: 600; text-decoration: none; margin-top: 8px; font-size: 15px; }
 
 /* ==================== READING PROGRESS BAR ==================== */
 .reading-progress-bar {
@@ -58,7 +58,7 @@
   top: 0;
   left: 0;
   height: 3px;
-  background: linear-gradient(90deg, #d83a34, #f97316);
+  background: linear-gradient(90deg, #0000, #0000);
   z-index: 9999;
   transition: width 0.1s linear;
   border-radius: 0 2px 2px 0;
@@ -69,22 +69,28 @@
   position: fixed;
   bottom: 28px;
   right: 28px;
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: #d83a34;
-  color: #fff;
+  background: #000;
+  color: #ffffff;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(216, 58, 52, 0.35);
   z-index: 999;
   opacity: 0;
   transform: translateY(20px);
   pointer-events: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.back-top-icon {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
 }
 
 .back-to-top.visible {
@@ -94,9 +100,8 @@
 }
 
 .back-to-top:hover {
-  background: #c22e28;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(216, 58, 52, 0.45);
+  transform: translateY(-4px);
+  background: #111;
 }
 
 /* ==================== MAIN CONTAINER ==================== */
@@ -130,7 +135,7 @@
   gap: 4px;
 }
 
-.breadcrumb a:hover { color: #d83a34; }
+.breadcrumb a:hover { color: black; }
 
 /* ==================== HEADER ==================== */
 .article-header {
@@ -152,7 +157,7 @@
   align-items: center;
   padding: 5px 12px;
   border-radius: 3px;
-  background: #d83a34;
+  background: #000;
   color: #fff;
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 11px;
@@ -204,7 +209,7 @@
   margin: 0 auto 24px;
   line-height: 1.65;
   max-width: 850px;
-  border-left: 4px solid #f97316;
+  border-left: 4px solid black;
   padding-left: 20px;
 }
 
@@ -240,6 +245,12 @@
 
 .author-name { font-weight: 600; font-size: 14px; color: #111; }
 
+.author-profession {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
 .meta-bottom {
   display: flex;
   align-items: center;
@@ -260,17 +271,25 @@
 
 /* ==================== HERO IMAGE ==================== */
 .hero-wrapper {
-  width: 100%;
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 32px;
-  background: #f0f0f0;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.image-caption-text {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.5;
+  max-width: 90%; /* Agar teks panjang tidak melebar sampai pinggir */
 }
 
 .hero-img {
   width: 100%;
-  max-height: 520px;
+  max-height: 420px;
   object-fit: cover;
   display: block;
 }
@@ -289,8 +308,8 @@
 /* ==================== MAIN CONTENT LAYOUT ==================== */
 .main-content-wrapper {
   display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 44px;
+  grid-template-columns: 1fr 100px;
+  gap: 43px;
   align-items: start;
 }
 
@@ -368,12 +387,16 @@
 .content-body { min-width: 0; }
 
 .text-render {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
   font-size: 17.5px;
-  line-height: 1.85;
+  line-height: 1.78;
   color: #333;
 }
 
-.text-render p { margin: 0 0 22px 0; }
+.text-render p { margin: 0 0 16px 0; }
 
 .text-render h2,
 .text-render h3 {
@@ -424,7 +447,7 @@
   margin-right: 10px;
   margin-top: 4px;
   font-weight: 700;
-  color: #d83a34;
+  color: #000;
   font-family: "Georgia", serif;
 }
 
@@ -592,6 +615,97 @@
 .author-bio-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .author-bio-info h4 { margin: 0 0 4px; font-family: system-ui, -apple-system, sans-serif; font-size: 15px; font-weight: 700; color: #111; }
 .author-bio-info p { margin: 0; font-family: system-ui, -apple-system, sans-serif; font-size: 13px; color: #777; line-height: 1.5; }
+.author-name-link {
+  display: inline-block;
+  color: #111;
+  text-decoration: none;
+}
+.author-name-link:hover {
+  color: #000;
+  text-decoration: underline;
+}
+.report-btn {
+  border: 1px solid #111;
+  background: #fff;
+  color: #111;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.report-btn:hover {
+  transform: translateY(-1px);
+  background: #f5f5f5;
+}
+.report-form-card {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid #111;       /* ← garis hitam */
+  background: #fff;             /* ← background putih */
+  border-radius: 12px;
+}
+.report-form-card label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+  display: block;
+  margin-bottom: 8px;
+}
+.report-form-card textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 14px;
+  border: 1px solid #111;       /* ← garis textarea hitam */
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #111;                  /* ← tulisan hitam */
+  background: #fff;             /* ← background putih */
+  resize: vertical;
+  margin-bottom: 14px;
+  box-sizing: border-box;
+}
+.report-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.submit-report-btn,
+.cancel-report-btn {
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+}
+.submit-report-btn {
+  color: #fff;
+  background: #111;
+}
+.cancel-report-btn {
+  background: #f3f4f6;
+  color: #111;
+  border: 1px solid #d1d5db;
+}
+.report-feedback {
+  margin-top: 12px;
+  font-size: 13px;
+}
+.report-feedback.success {
+  color: #166534;
+}
+.report-feedback.error {
+  color: #b91c1c;
+}
 
 /* ==================== SIDEBAR KOMENTAR ==================== */
 .discussion-sidebar {
@@ -923,6 +1037,69 @@
 .related-card:hover h4 { color: #d83a34; }
 .related-date { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; color: #aaa; }
 
+.article-layout-wrapper {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.article-main-content {
+  flex: 1;
+  min-width: 0;
+  background-color: #ffffff;
+}
+
+/* Sidebar iklan - sama persis kayak home */
+.ad-sidebar {
+  flex-shrink: 0;
+  width: 160px;
+  background-color: #ffffff;
+}
+
+.ad-sidebar-sticky {
+  position: sticky;
+  top: 80px; /* sesuaikan tinggi navbar */
+}
+
+/* Iklan sebelum footer */
+.ad-before-footer {
+  margin: 32px 16px 16px;
+  background-color: #ffffff;
+}
+
+/* ===== FIX BACKGROUND ABU-ABU ===== */
+.article-container {
+  background-color: #ffffff;
+}
+
+
+.load-more-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 32px 0;
+}
+
+.load-more-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 28px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.load-more-btn:hover { background: #353535; }
+
+.load-more-counter {
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
 /* ==================== PRINT STYLES ==================== */
 @media print {
   .reading-progress-bar,
@@ -975,10 +1152,20 @@
     padding-left: 16px;
   }
 
-  .text-render {
-    font-size: 16px;
-    line-height: 1.75;
-  }
+.text-render {
+  font-size: 19px;
+  line-height: 1.9;
+  color: #1f1f1f;
+  word-break: break-word;
+}
+
+.text-render p {
+  margin: 12px;
+}
+
+.text-render p:last-child {
+  margin-bottom: 0;
+}
 
   .hero-img { max-height: 220px; }
 

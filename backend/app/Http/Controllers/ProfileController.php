@@ -154,4 +154,36 @@ class ProfileController extends Controller
         // Kembalikan array (sudah otomatis ter-reset indexnya 0,1,2..)
         return array_values($formatted);
     }
+
+    /**
+     * Dapatkan profil public berdasarkan id user.
+     */
+    public function showPublic($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+
+            $articles = Article::where('user_id', $user->id)
+                ->where('status', 'approved')
+                ->latest()
+                ->get();
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'bio' => $user->bio ?? '',
+                    'profession' => $user->profession ?? '',
+                    'schoolName' => $user->school_name ?? '',
+                    'avatar' => $user->avatar ? (filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : asset('storage/' . $user->avatar)) : null,
+                    'articles' => $this->formatArticles($articles),
+                ],
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['message' => 'User tidak ditemukan'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Terjadi kesalahan server', 'error' => $e->getMessage()], 500);
+        }
+    }
 }

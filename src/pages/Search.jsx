@@ -3,6 +3,8 @@ import { useLocation, Link } from "react-router-dom";
 import axios from "../utils/axiosConfig";
 import "./Category.css"; // Kita pakai CSS category biar tampilannya konsisten
 
+const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 const Search = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,7 +50,9 @@ const Search = () => {
               <Link className="article-card" key={article.id} to={`/article/${article.id}`}>
                 <div className="article-image-wrapper">
                   <img
-                    src={article.image ? `http://localhost:8000/storage/${article.image}` : "https://via.placeholder.com/400x250"}
+                    src={article.image
+                      ? (article.image.startsWith('http') ? article.image : `${baseUrl}/storage/${article.image}`)
+                      : "https://via.placeholder.com/400x250"}
                     alt={article.title}
                     onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/400x250"; }}
                   />

@@ -9,19 +9,16 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // --- STATE ---
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [showPw, setShowPw] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // --- LIFECYCLE ---
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 50);
     return () => clearTimeout(t);
   }, []);
 
-  // --- HANDLERS ---
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -31,18 +28,37 @@ const Login = () => {
     setLoading(true);
 
     try {
-      await ensureCsrfToken();
       const response = await axios.post('/api/login', formData);
 
-      if (response.status === 200 || response.status === 204) {
-        const userData = response.data.user;
-        const token = response.data.token || response.data.access_token;
+      // ✅ FIX: Parse response.data kalau masih string (terjadi kalau backend tidak set Content-Type: application/json)
+      const data = typeof response.data === 'string'
+        ? JSON.parse(response.data)
+        : response.data;
 
-        login(userData, token);
-        navigate('/');
+      console.log('=== DEBUG LOGIN ===');
+      console.log('data:', data);
+      console.log('data.user:', data.user);
+      console.log('data.access_token:', data.access_token);
+      console.log('data.token:', data.token);
+
+      // ✅ FIX: Ambil user dan token dari data yang sudah di-parse
+      const userData = data.user;
+      const token = data.access_token || data.token;
+
+      if (!userData || !token) {
+        console.error('userData atau token kosong:', { userData, token });
+        alert('Login gagal: respons server tidak valid. Cek console.');
+        return;
       }
+
+      // ✅ Panggil login dari AuthContext — ini yang update navbar
+      login(userData, token);
+
+      // ✅ Navigate ke home setelah login berhasil
+      navigate('/');
+
     } catch (error) {
-      console.error('Login gagal:', error.response?.data);
+      console.error('Login gagal:', error.response?.data || error.message);
       const errorMessage = error.response?.data?.message || 'Email atau kata sandi salah';
       alert(errorMessage);
     } finally {
@@ -80,11 +96,9 @@ const Login = () => {
     </svg>
   );
 
-  // --- RENDER ---
   return (
     <div className={`login-page ${mounted ? 'is-mounted' : ''}`}>
 
-      {/* Background Decorations */}
       <div className="particles" aria-hidden="true">
         {[...Array(6)].map((_, i) => (
           <span
@@ -106,7 +120,6 @@ const Login = () => {
       <div className="deco-shape deco-shape-1" aria-hidden="true" />
       <div className="deco-shape deco-shape-2" aria-hidden="true" />
 
-      {/* Back Button */}
       <button className="back-btn" onClick={() => navigate('/')} aria-label="Kembali">
         <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2.5" fill="none">
           <line x1="19" y1="12" x2="5" y2="12" />
@@ -114,19 +127,13 @@ const Login = () => {
         </svg>
       </button>
 
-      {/* Card */}
       <div className="login-card">
-
-        {/* Header */}
         <div className="logo-wrap anim-item" style={{ '--i': 0 }}>
           <img src={logoSukaMuda} alt="Logo SUKAMUDA" className="logo-img" />
         </div>
         <h1 className="login-heading anim-item" style={{ '--i': 1 }}>Login</h1>
 
-        {/* Form */}
         <form className="login-form" onSubmit={handleLogin}>
-
-          {/* Email */}
           <div className="input-group anim-item" style={{ '--i': 2 }}>
             <label htmlFor="email">Email</label>
             <div className="input-box">
@@ -144,7 +151,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Password */}
           <div className="input-group anim-item" style={{ '--i': 3 }}>
             <label htmlFor="password">Kata Sandi</label>
             <div className="input-box">
@@ -170,14 +176,12 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Forgot Password */}
           <div className="anim-item" style={{ '--i': 4 }}>
             <Link to="/forgot-password" style={{ textDecoration: 'none' }}>
               <p className="forgot-link">Lupa Kata Sandi?</p>
             </Link>
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             className="btn-login anim-item"
@@ -188,7 +192,6 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Footer */}
         <div className="login-sep" />
         <p className="login-footer anim-item" style={{ '--i': 6 }}>
           Belum punya akun? <Link to="/register" className="link-dark">Daftar</Link>

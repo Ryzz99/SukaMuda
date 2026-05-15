@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Comment;
 use App\Models\ArticleLike;
+use App\Models\Notification;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,11 +21,14 @@ class Article extends Model
         'slug',
         'category',
         'image',
+        'image_caption',
         'summary',
         'content',
         'tags',
         'status', // Nilai: 'approved', 'pending', 'draft', 'rejected'
+        'rejection_reason',
         'views',
+        'is_trending', // Tambahkan
     ];
 
     /**
@@ -59,5 +63,13 @@ class Article extends Model
     {
         return $this->belongsToMany(User::class, 'article_likes', 'article_id', 'user_id')
                     ->withTimestamps();
+    }
+
+    /**
+     * Relasi ke notifikasi yang terkait dengan artikel ini
+     */
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
     }
 }

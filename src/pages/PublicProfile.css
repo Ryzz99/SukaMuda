@@ -1,0 +1,149 @@
+.public-profile-page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  color: #111;
+}
+
+.profile-hero-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  padding: 28px;
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 18px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.06);
+}
+
+.profile-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d83a34, #f97316);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 700;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-headline h1 {
+  margin: 0 0 10px;
+  font-size: 32px;
+}
+
+.profile-role,
+.profile-school,
+.profile-bio {
+  margin: 6px 0;
+  color: #444;
+  line-height: 1.6;
+}
+
+.profile-role {
+  font-weight: 700;
+}
+
+.profile-articles-section {
+  margin-top: 30px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.section-header span {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.author-articles-grid {
+  display: grid;
+  grid-template-columns: repeat( auto-fit, minmax(260px, 1fr) );
+  gap: 18px;
+}
+
+.author-article-card {
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 18px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.author-article-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.article-card-content h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.article-card-content p {
+  margin: 0 0 12px;
+  color: #556;
+  line-height: 1.7;
+  min-height: 54px;
+}
+
+.publish-date {
+  display: inline-block;
+  font-size: 13px;
+  color: #8b8b8b;
+}
+
+.profile-loading,
+.profile-error {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.profile-error h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.profile-error p {
+  margin: 0;
+  color: #555;
+}
+
+.profile-error a {
+  color: #d83a34;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.profile-error a:hover {
+  text-decoration: underline;
+}

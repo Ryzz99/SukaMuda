@@ -51,7 +51,7 @@ const Footer = () => {
           <Link to="/About">Tentang</Link>
           <Link to="/Terms">Syarat dan ketentuan</Link>
           <Link to="/Rules">Kebijakan Privasi & Kebijakan Penggunaan</Link>
-          <Link to="/iklan">Iklan</Link>
+          <Link to="/redaksi">Redaksi</Link>
           <Link to="/Help">Bantuan</Link>
           <Link to="/faq">FAQ</Link>
         </div>

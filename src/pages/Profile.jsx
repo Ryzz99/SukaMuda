@@ -8,426 +8,16 @@ import {
   IoDocumentTextOutline,
   IoTimeOutline,
   IoFileTrayOutline,
+  IoFlagOutline,
 } from 'react-icons/io5';
 import { useAuth } from '../context/AuthContext';
 import axios, { ensureCsrfToken } from '../utils/axiosConfig';
+import './Profile.css';
 
-/* ─────────────────────────────────────────────
-   CONFIG
-───────────────────────────────────────────── */
-const daftarProfession = ['Content Writer', 'Blogger', 'Freelance Writer', 'Contributor', 'Other'];
+const daftarProfession = ['Content Writer', 'Blogger', 'Freelance Writer', 'Contributor', 'Mahasiswa', 'Pelajar', 'Other'];
 const pilihanInterest  = ['News', 'Lifestyle', 'Music & Film', 'Health', 'Hobby', 'Science', 'Sport', 'Gadget', 'Automotive'];
 
-/* ─────────────────────────────────────────────
-   STYLES  (injected once)
-───────────────────────────────────────────── */
-const CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap');
-
-  :root {
-    --bg: #f5f5f0;
-    --white: #ffffff;
-    --black: #111111;
-    --border: #e0e0d8;
-    --text-1: #111111;
-    --text-2: #555550;
-    --text-3: #999990;
-    --accent: #1a1a1a;
-    --accent-light: #f0f0eb;
-    --danger: #dc2626;
-    --radius: 12px;
-    --shadow: 0 2px 12px rgba(0,0,0,.07);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  .pp-page {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    min-height: 100vh;
-    color: var(--text-1);
-  }
-
-  /* ── HEADER ── */
-  .pp-header {
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-  }
-  .pp-banner {
-    height: 140px;
-    background: linear-gradient(135deg, #d4d4cc 0%, #c8c8be 100%);
-  }
-  .pp-info-row {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 24px 28px;
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-    position: relative;
-  }
-  .pp-avatar-wrap {
-    position: relative;
-    margin-top: -52px;
-    flex-shrink: 0;
-  }
-  .pp-avatar {
-    width: 104px;
-    height: 104px;
-    border-radius: 50%;
-    background: var(--black);
-    border: 4px solid var(--white);
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-family: 'DM Serif Display', serif;
-    font-size: 36px;
-    color: var(--white);
-    background-size: cover;
-    background-position: center;
-  }
-  .pp-avatar-edit {
-    position: absolute;
-    bottom: 4px;
-    right: 4px;
-    width: 26px;
-    height: 26px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: var(--shadow);
-  }
-  .pp-meta {
-    flex: 1;
-    padding-top: 14px;
-  }
-  .pp-name-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 4px;
-  }
-  .pp-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: 26px;
-    font-weight: 400;
-    color: var(--text-1);
-  }
-  .pp-edit-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-3);
-    display: flex;
-    align-items: center;
-    padding: 2px;
-    transition: color .15s;
-  }
-  .pp-edit-btn:hover { color: var(--text-1); }
-  .pp-bio  { font-size: 14px; color: var(--text-2); margin-bottom: 4px; }
-  .pp-prof { font-size: 14px; color: var(--text-2); margin-bottom: 10px; }
-  .pp-pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pp-pill {
-    font-size: 12px;
-    font-weight: 600;
-    background: var(--black);
-    color: var(--white);
-    padding: 4px 12px;
-    border-radius: 999px;
-    letter-spacing: .02em;
-  }
-
-  /* ── COMPLETION ── */
-  .pp-completion {
-    max-width: 860px;
-    margin: 16px auto 0;
-    padding: 0 24px;
-  }
-  .pp-cw {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .pp-cw-text h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-  .pp-cw-text p  { font-size: 12px; color: var(--text-3); }
-  .pp-cw-bar { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
-  .pp-cw-fill { height: 100%; background: var(--black); border-radius: 99px; transition: width .4s ease; }
-  .pp-cw-pct { font-size: 13px; font-weight: 700; white-space: nowrap; }
-
-  /* ── TABS ── */
-  .pp-tabs {
-    max-width: 860px;
-    margin: 20px auto 0;
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    gap: 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .pp-tab {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-3);
-    padding: 10px 20px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: color .15s;
-  }
-  .pp-tab::after {
-    content: '';
-    position: absolute;
-    bottom: -1px; left: 0; right: 0;
-    height: 2px;
-    background: var(--black);
-    border-radius: 99px;
-    opacity: 0;
-    transition: opacity .15s;
-  }
-  .pp-tab.active { color: var(--text-1); }
-  .pp-tab.active::after { opacity: 1; }
-  .pp-tab-sep { color: var(--border); font-size: 18px; user-select: none; }
-
-  /* ── CONTENT ── */
-  .pp-content {
-    max-width: 860px;
-    margin: 24px auto 60px;
-    padding: 0 24px;
-  }
-
-  /* ── ARTICLE CARD ── */
-  .pp-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    display: flex;
-    gap: 0;
-    overflow: hidden;
-    margin-bottom: 14px;
-    transition: box-shadow .2s;
-  }
-  .pp-card:hover { box-shadow: var(--shadow); }
-  .pp-card-thumb {
-    width: 130px;
-    flex-shrink: 0;
-    background: #e8e8e0;
-    position: relative;
-    min-height: 110px;
-  }
-  .pp-card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .pp-card-cat {
-    position: absolute;
-    top: 8px; left: 8px;
-    font-size: 10px;
-    font-weight: 700;
-    background: #2563eb;
-    color: #fff;
-    padding: 3px 8px;
-    border-radius: 4px;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-  }
-  .pp-card-badge {
-    position: absolute;
-    top: 8px; left: 8px;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 4px;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    color: #fff;
-  }
-  .badge-pending  { background: #d97706; }
-  .badge-rejected { background: var(--danger); }
-  .badge-draft    { background: #6b7280; }
-
-  .pp-card-body {
-    flex: 1;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .pp-card-author { font-size: 13px; color: var(--text-2); margin-bottom: 2px; }
-  .pp-card-submeta { font-size: 12px; color: var(--text-3); margin-bottom: 6px; }
-  .pp-card-title  { font-family: 'DM Serif Display', serif; font-size: 17px; font-weight: 400; line-height: 1.35; color: var(--text-1); }
-
-  .pp-card-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .pp-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 14px;
-    transition: opacity .15s;
-  }
-  .pp-btn:hover { opacity: .8; }
-  .pp-btn-primary { background: var(--black); color: var(--white); }
-  .pp-btn-ghost   { background: transparent; border: 1px solid var(--border); color: var(--text-2); }
-  .pp-btn-danger  { background: var(--danger); color: var(--white); }
-  .pp-btn-link    { background: transparent; color: var(--text-1); font-weight: 700; padding: 6px 0; }
-  .pp-btn:disabled { opacity: .5; cursor: not-allowed; }
-
-  .pp-trash { background: none; border: none; cursor: pointer; color: var(--text-3); display: flex; align-items: center; margin-left: auto; transition: color .15s; }
-  .pp-trash:hover { color: var(--danger); }
-
-  /* ── EMPTY ── */
-  .pp-empty {
-    text-align: center;
-    padding: 60px 0;
-    color: var(--text-3);
-    font-size: 14px;
-  }
-  .pp-empty svg { margin-bottom: 10px; opacity: .35; }
-
-  /* ── ERROR ── */
-  .pp-error {
-    max-width: 860px;
-    margin: 16px auto 0;
-    padding: 0 24px;
-  }
-  .pp-error-inner {
-    background: #fef2f2;
-    color: var(--danger);
-    padding: 12px 16px;
-    border-radius: var(--radius);
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  /* ── MODAL ── */
-  .pp-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    padding: 20px;
-  }
-  .pp-modal {
-    background: var(--white);
-    border-radius: 16px;
-    width: 100%;
-    max-width: 480px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,.18);
-  }
-  .pp-modal-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 24px 0;
-    margin-bottom: 18px;
-  }
-  .pp-modal-head h2 { font-family: 'DM Serif Display', serif; font-size: 20px; font-weight: 400; }
-  .pp-modal-close { background: none; border: none; cursor: pointer; color: var(--text-3); display: flex; }
-  .pp-modal-body { padding: 0 24px; }
-  .pp-modal-foot { padding: 20px 24px 24px; display: flex; justify-content: flex-end; gap: 10px; }
-
-  .pp-field { margin-bottom: 16px; }
-  .pp-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-2); }
-  .pp-input, .pp-select {
-    width: 100%;
-    padding: 9px 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--text-1);
-    background: var(--white);
-    outline: none;
-    transition: border-color .15s;
-  }
-  .pp-input:focus, .pp-select:focus { border-color: var(--black); }
-
-  .pp-interest-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-  .pp-interest-chip {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 5px 14px;
-    border-radius: 999px;
-    border: 1.5px solid var(--border);
-    cursor: pointer;
-    transition: all .15s;
-    background: var(--white);
-    color: var(--text-2);
-  }
-  .pp-interest-chip.active {
-    background: var(--black);
-    color: var(--white);
-    border-color: var(--black);
-  }
-
-  /* ── DELETE MODAL ── */
-  .pp-del-modal {
-    background: var(--white);
-    border-radius: 16px;
-    width: 100%;
-    max-width: 340px;
-    padding: 32px 28px;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,.18);
-  }
-  .pp-del-icon { color: var(--danger); margin-bottom: 14px; }
-  .pp-del-modal h2 { font-family: 'DM Serif Display', serif; font-size: 20px; font-weight: 400; margin-bottom: 8px; }
-  .pp-del-modal p  { font-size: 13px; color: var(--text-3); margin-bottom: 24px; }
-  .pp-del-btns { display: flex; gap: 10px; justify-content: center; }
-
-  /* ── LOADING ── */
-  .pp-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 60vh;
-    font-size: 14px;
-    color: var(--text-3);
-    font-family: 'DM Sans', sans-serif;
-  }
-`;
-
-function useStyles(css) {
-  useEffect(() => {
-    const el = document.createElement('style');
-    el.textContent = css;
-    document.head.appendChild(el);
-    return () => document.head.removeChild(el);
-  }, []);
-}
-
-/* ─────────────────────────────────────────────
-   MAIN COMPONENT
-───────────────────────────────────────────── */
 const Profile = () => {
-  useStyles(CSS);
   const { refreshUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -456,11 +46,16 @@ const Profile = () => {
   const [deleteTarget, setDeleteTarget] = useState({ id: null, type: null, title: '' });
   const [deleting, setDeleting]         = useState(false);
 
+  const [reportTarget, setReportTarget] = useState({ id: null, title: '' });
+  const [reportReason, setReportReason] = useState('');
+  const [reporting, setReporting]       = useState(false);
+
   /* ── completion ── */
   const profileData = useMemo(() => {
+    const needsSchool = ['Pelajar', 'Mahasiswa', 'Pelajar/Mahasiswa'].includes(userData.profession);
     const checks = [
       { done: Boolean(String(userData.profession || '').trim()) },
-      { done: Boolean(String(userData.schoolName || '').trim()) },
+      { done: needsSchool ? Boolean(String(userData.schoolName || '').trim()) : true },
       { done: Array.isArray(userData.interest) && userData.interest.length > 0 },
     ];
     const completed = checks.filter(c => c.done).length;
@@ -547,7 +142,8 @@ const Profile = () => {
       fd.append('name',       tempData.name || '');
       fd.append('bio',        tempData.bio  || '');
       fd.append('profession', tempData.profession || '');
-      fd.append('schoolName', tempData.schoolName || '');
+      const isStudent = ['Pelajar', 'Mahasiswa', 'Pelajar/Mahasiswa'].includes(tempData.profession);
+      fd.append('schoolName', isStudent ? tempData.schoolName || '' : '');
       (Array.isArray(tempData.interest) ? tempData.interest : [])
         .forEach(item => fd.append('interests[]', item));
       if (avatarFile) fd.append('avatarFile', avatarFile);
@@ -598,7 +194,28 @@ const Profile = () => {
     }
   };
 
+  const handleReportArticle = async () => {
+    if (!reportTarget.id || !reportReason.trim()) return;
+    setReporting(true);
+    try {
+      await ensureCsrfToken();
+      await axios.post('/api/reports', {
+        article_id: reportTarget.id,
+        reason: reportReason.trim(),
+      });
+      alert('Laporan berhasil dikirim.');
+      setReportTarget({ id: null, title: '' });
+      setReportReason('');
+    } catch (err) {
+      console.error(err);
+      alert('Gagal mengirim laporan.');
+    } finally {
+      setReporting(false);
+    }
+  };
+
   const clearDelete = () => !deleting && setDeleteTarget({ id: null, type: null, title: '' });
+  const clearReport = () => !reporting && setReportTarget({ id: null, title: '' });
 
   /* ── loading ── */
   if (loading) return <div className="pp-loading">Memuat profil…</div>;
@@ -634,7 +251,10 @@ const Profile = () => {
               </button>
             </div>
             <p className="pp-bio">{userData.bio || 'Belum ada bio.'}</p>
-            <p className="pp-prof">{userData.profession}{userData.schoolName ? ` · ${userData.schoolName}` : ''}</p>
+            <p className="pp-prof">
+              {userData.profession}
+              {['Pelajar', 'Mahasiswa', 'Pelajar/Mahasiswa'].includes(userData.profession) && userData.schoolName ? ` · ${userData.schoolName}` : ''}
+            </p>
             {Array.isArray(userData.interest) && userData.interest.length > 0 && (
               <div className="pp-pills">
                 {userData.interest.map((it, i) => (
@@ -694,7 +314,7 @@ const Profile = () => {
           posts.length > 0
             ? posts.map(p => (
                 <ArticleCard key={p.id} data={p} type="post" userName={userData.name}
-                  onDelete={() => setDeleteTarget({ id: p.id, type: 'post', title: p.title })} />
+                  onReport={() => setReportTarget({ id: p.id, title: p.title })} />
               ))
             : <EmptyState message="Belum ada artikel yang diterbitkan." />
         )}
@@ -744,10 +364,36 @@ const Profile = () => {
               <div className="pp-field">
                 <label className="pp-label">Profesi</label>
                 <select className="pp-select" value={tempData.profession}
-                  onChange={e => setTempData({ ...tempData, profession: e.target.value })}>
+                  onChange={e => {
+                    const profession = e.target.value;
+                    const isStudent = ['Pelajar', 'Mahasiswa', 'Pelajar/Mahasiswa'].includes(profession);
+                    setTempData({
+                      ...tempData,
+                      profession,
+                      schoolName: isStudent ? tempData.schoolName : '',
+                    });
+                  }}>
                   {daftarProfession.map(p => <option key={p} value={p}>{p}</option>)}
                 </select>
               </div>
+              {['Pelajar'].includes(tempData.profession) && (
+                <div className="pp-field">
+                  <label className="pp-label">Asal Sekolah/Kampus</label>
+                  <input className="pp-input" value={tempData.schoolName}
+                    onChange={e => setTempData({ ...tempData, schoolName: e.target.value })}
+                    placeholder="Nama sekolah" />
+                </div>
+              )}
+
+              {['Mahasiswa'].includes(tempData.profession) && (
+                <div className="pp-field">
+                  <label className="pp-label">Asal Kampus</label>
+                  <input className="pp-input" value={tempData.schoolName}
+                    onChange={e => setTempData({ ...tempData, schoolName: e.target.value })}
+                    placeholder="Nama Kampus" />
+                </div>
+              )}
+
               <div className="pp-field">
                 <label className="pp-label">Minat</label>
                 <div className="pp-interest-grid">
@@ -801,6 +447,30 @@ const Profile = () => {
           </div>
         </div>
       )}
+
+      {/* ── MODAL REPORT ── */}
+      {reportTarget.id && (
+        <div className="pp-overlay" onClick={clearReport}>
+          <div className="pp-report-modal" onClick={e => e.stopPropagation()}>
+            <div className="pp-report-icon"><IoFlagOutline size={40} /></div>
+            <h2>Laporkan Artikel</h2>
+            <p>Artikel: "{reportTarget.title}"</p>
+            <textarea
+              className="pp-report-textarea"
+              placeholder="Jelaskan alasan pelaporan..."
+              value={reportReason}
+              onChange={e => setReportReason(e.target.value)}
+              rows={4}
+            />
+            <div className="pp-report-btns">
+              <button className="pp-btn pp-btn-ghost" onClick={clearReport}>Batal</button>
+              <button className="pp-btn pp-btn-primary" onClick={handleReportArticle} disabled={reporting || !reportReason.trim()}>
+                {reporting ? 'Mengirim…' : 'Kirim Laporan'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -808,7 +478,7 @@ const Profile = () => {
 /* ─────────────────────────────────────────────
    SUB COMPONENTS
 ───────────────────────────────────────────── */
-const ArticleCard = ({ data, type, userName, onDelete, onEdit }) => {
+const ArticleCard = ({ data, type, userName, onDelete, onEdit, onReport }) => {
   const date = data.createdAt
     ? new Date(data.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })
     : '-';
@@ -846,6 +516,11 @@ const ArticleCard = ({ data, type, userName, onDelete, onEdit }) => {
           {onDelete && (
             <button className="pp-trash" onClick={onDelete} aria-label="Hapus artikel">
               <IoTrashOutline size={18} />
+            </button>
+          )}
+          {onReport && type === 'post' && (
+            <button className="pp-report" onClick={onReport} aria-label="Laporkan artikel">
+              <IoFlagOutline size={18} />
             </button>
           )}
         </div>

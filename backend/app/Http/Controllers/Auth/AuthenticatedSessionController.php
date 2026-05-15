@@ -3,40 +3,46 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse; // Ubah ke JsonResponse
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
-        // 1. Proses Autentikasi
-        $request->authenticate();
+        // 1. Validasi input
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|string',
+        ]);
 
-        // 2. Regenerate Session (Keamanan)
-        $request->session()->regenerate();
+        // 2. Cek kredensial
+        if (!Auth::attempt([
+            'email'    => $request->email,
+            'password' => $request->password,
+        ])) {
+            return response()->json([
+                'message' => 'Email atau kata sandi salah.'
+            ], 401);
+        }
 
-        // 3. Kirim data user ke React biar bisa disimpan di AuthContext
+        // 3. Ambil user & buat token Sanctum
+        $user  = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         return response()->json([
-            'message' => 'Login berhasil!',
-            'user' => Auth::user(),
+            'message'      => 'Login berhasil!',
+            'access_token' => $token,
+            'token_type'   => 'Bearer',
+            'user'         => $user,
         ], 200);
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
     public function destroy(Request $request): JsonResponse
     {
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        // Hapus token yang sedang dipakai
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Berhasil logout'

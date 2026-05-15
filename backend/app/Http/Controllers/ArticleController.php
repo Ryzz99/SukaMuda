@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\ArticleLike;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -76,39 +77,19 @@ class ArticleController extends Controller
         return response()->json($articles->items())->header('Cache-Control', 'no-store, no-cache, must-revalidate');
     }
 
-    public function getTrendingArticles(Request $request)
-    {
-        $user = $request->user('sanctum');
-        $articles = Article::where('status', 'approved')
-            ->with('user')
-            ->withCount(['likes', 'comments'])
-            ->select('id', 'title', 'slug', 'category', 'summary', 'image', 'user_id', 'views', 'created_at', 'updated_at')
-            ->addSelect(DB::raw('((SELECT COUNT(*) FROM article_likes WHERE article_likes.article_id = articles.id) * 3) + ((SELECT COUNT(*) FROM comments WHERE comments.article_id = articles.id) * 5) + (views) as popularity_score'))
-            ->orderByDesc('popularity_score')
-            ->paginate(20);
-
-        $articles->getCollection()->each(function ($article) use ($user) {
-            if ($article->image && !filter_var($article->image, FILTER_VALIDATE_URL)) {
-                $article->image = asset('storage/' . $article->image);
-            }
-            if ($user) $article->is_liked_by_user = $article->likes()->where('user_id', $user->id)->exists();
-        });
-
-        return response()->json($articles->items());
-    }
-
     /**
      * FUNGSI SIMPAN ARTIKEL BARU
      */
     public function store(Request $request)
     {
         $request->validate([
-            'title'    => 'required|string|max:255',
-            'category' => 'required|string',
-            'summary'  => 'nullable|string|max:500',
-            'content'  => 'required|string',
-            'image'    => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
-            'status'   => 'nullable|string|in:draft,review,published,approved,pending'
+            'title'         => 'required|string|max:255',
+            'category'      => 'required|string',
+            'summary'       => 'nullable|string|max:500',
+            'content'       => 'required|string',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
+            'image_caption' => 'nullable|string|max:255', // TAMBAHKAN INI
+            'status'        => 'nullable|string|in:draft,review,published,approved,pending'
         ]);
 
         $user = $request->user();
@@ -120,16 +101,17 @@ class ArticleController extends Controller
         }
 
         $article = Article::create([
-            'user_id'  => $user->id,
-            'title'    => $request->title,
-            'slug'     => Str::slug($request->title) . '-' . time(),
-            'category' => $request->category,
-            'summary'  => $request->summary,
-            'content'  => $request->content,
-            'image'    => $imagePath,
-            'status'   => $finalStatus,
-            'tags'     => $request->tags,
-            'views'    => 0
+            'user_id'       => $user->id,
+            'title'         => $request->title,
+            'slug'          => Str::slug($request->title) . '-' . time(),
+            'category'      => $request->category,
+            'summary'       => $request->summary,
+            'content'       => $request->content,
+            'image'         => $imagePath,
+            'image_caption' => $request->image_caption, // TAMBAHKAN INI
+            'status'        => $finalStatus,
+            'tags'          => $request->tags,
+            'views'         => 0
         ]);
 
         if ($article->image) {
@@ -141,25 +123,25 @@ class ArticleController extends Controller
     }
 
     /**
-     * FUNGSI UPDATE ARTIKEL (Perbaikan Error 500)
+     * FUNGSI UPDATE ARTIKEL
      */
     public function update(Request $request, $id)
     {
         $article = Article::findOrFail($id);
         $user = $request->user();
 
-        // Pastikan hanya pemilik atau admin yang bisa update
         if ($article->user_id !== $user->id && $user->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         $request->validate([
-            'title'    => 'required|string|max:255',
-            'category' => 'required|string',
-            'summary'  => 'nullable|string|max:500',
-            'content'  => 'required|string',
-            'image'    => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
-            'status'   => 'nullable|string'
+            'title'         => 'required|string|max:255',
+            'category'      => 'required|string',
+            'summary'       => 'nullable|string|max:500',
+            'content'       => 'required|string',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
+            'image_caption' => 'nullable|string|max:255', // TAMBAHKAN INI
+            'status'        => 'nullable|string'
         ]);
 
         if ($request->hasFile('image')) {
@@ -174,6 +156,7 @@ class ArticleController extends Controller
         $article->summary = $request->summary;
         $article->content = $request->content;
         $article->tags = $request->tags;
+        $article->image_caption = $request->image_caption; // TAMBAHKAN INI
         
         if ($request->has('status')) {
             $article->status = $request->status;
@@ -187,69 +170,63 @@ class ArticleController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        $request->validate(['status' => 'required|in:approved,rejected,pending,draft']);
         $article = Article::findOrFail($id);
-        $article->update(['status' => $request->status]);
-        Cache::flush();
-        return response()->json(['message' => 'Status berhasil diubah']);
-    }
+        $user = $request->user();
 
-    public function destroy(Request $request, $id)
-    {
-        $article = Article::findOrFail($id);
-        
-        if ($article->user_id !== $request->user()->id && $request->user()->role !== 'admin') {
+        if (!$user || $user->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        if ($article->image) {
-            Storage::disk('public')->delete($article->image);
-        }
-
-        $article->delete();
-        Cache::flush();
-        return response()->json(['message' => 'Artikel berhasil dihapus!']);
-    }
-
-    public function incrementView($id)
-    {
-        $article = Article::findOrFail($id);
-        $article->increment('views');
-        return response()->json(['views' => $article->views]);
-    }
-
-    public function getComments($id)
-    {
-        $comments = Comment::where('article_id', $id)->with('user')->latest()->paginate(20);
-        return response()->json($comments->items());
-    }
-
-    public function storeComment(Request $request, $id)
-    {
-        $request->validate(['body' => 'required|string']);
-        $comment = Comment::create([
-            'article_id' => $id,
-            'user_id' => $request->user()->id,
-            'body' => $request->body
+        $request->validate([
+            'status' => 'required|string|in:approved,rejected,pending',
+            'rejection_reason' => 'nullable|string|max:1000',
         ]);
-        return response()->json($comment->load('user'), 201);
-    }
 
-    public function deleteComment(Request $request, $id)
-    {
-        $comment = Comment::findOrFail($id);
-        if ($request->user()->id !== $comment->user_id && $request->user()->role !== 'admin') {
-            return response()->json(['message' => 'Unauthorized'], 403);
+        $oldStatus = $article->status;
+        $article->status = $request->status;
+        
+        // Simpan alasan penolakan jika status rejected
+        if ($request->status === 'rejected') {
+            $article->rejection_reason = $request->rejection_reason;
         }
-        $comment->delete();
-        return response()->json(['message' => 'Komentar terhapus!']);
+        
+        $article->save();
+
+        // Buat notifikasi untuk penulis artikel
+        $articleTitle = $article->title;
+        
+        if ($request->status === 'approved') {
+            $message = "Artikel anda yang berjudul \"{$articleTitle}\" telah disetujui oleh admin sukamuda";
+            $notificationType = 'article_approved';
+        } else if ($request->status === 'rejected') {
+            $message = "Artikel anda yang berjudul \"{$articleTitle}\" telah ditolak oleh admin sukamuda";
+            $notificationType = 'article_rejected';
+        } else {
+            $message = "Artikel anda yang berjudul \"{$articleTitle}\" sedang dalam review";
+            $notificationType = 'article_pending';
+        }
+
+        Notification::create([
+            'user_id' => $article->user_id,
+            'article_id' => $article->id,
+            'triggered_by_user_id' => $user->id,
+            'type' => $notificationType,
+            'message' => $message,
+            'rejection_reason' => $request->rejection_reason ?? null,
+        ]);
+
+        Cache::flush();
+
+        return response()->json(['message' => 'Status berita berhasil diperbarui!', 'data' => $article]);
     }
 
+    // --- Sisanya Fungsi Like, Comment, dll (Tetap Sama) ---
     public function toggleLike(Request $request, $id)
     {
         $user = $request->user();
         if (!$user) return response()->json(['message' => 'Unauthenticated'], 401);
 
+        $article = Article::findOrFail($id);
         $like = ArticleLike::where('user_id', $user->id)->where('article_id', $id)->first();
         
         if ($like) {
@@ -258,6 +235,21 @@ class ArticleController extends Controller
         } else {
             ArticleLike::create(['user_id' => $user->id, 'article_id' => $id]);
             $status = 'liked';
+
+            // Buat notifikasi jika like (jangan untuk unlike)
+            // Jangan kirim notifikasi ke user sendiri
+            if ($article->user_id !== $user->id) {
+                $message = "{$user->name} menyukai artikel anda yang berjudul \"{$article->title}\"";
+                
+                Notification::create([
+                    'user_id' => $article->user_id,
+                    'article_id' => $article->id,
+                    'triggered_by_user_id' => $user->id,
+                    'type' => 'article_liked',
+                    'message' => $message,
+                    'triggered_by_user_name' => $user->name,
+                ]);
+            }
         }
 
         $likesCount = ArticleLike::where('article_id', $id)->count();
@@ -268,4 +260,50 @@ class ArticleController extends Controller
             'likes_count' => $likesCount
         ]);
     }
+    
+    public function incrementView($id)
+    {
+        $article = Article::findOrFail($id);
+        $article->increment('views');
+        return response()->json(['views' => $article->views]);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $article = Article::findOrFail($id);
+        if ($article->user_id !== $request->user()->id && $request->user()->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        if ($article->image) Storage::disk('public')->delete($article->image);
+        $article->delete();
+        Cache::flush();
+        return response()->json(['message' => 'Artikel berhasil dihapus!']);
+    }
+    public function toggleTrending($id)
+    {
+        $article = Article::findOrFail($id);
+
+        $article->is_trending = !$article->is_trending;
+        $article->save();
+
+        Cache::flush();
+
+        return response()->json([
+            'message' => 'Trending updated',
+            'is_trending' => $article->is_trending
+        ]);
+    }
+
+    public function trending()
+    {
+        $articles = Article::where('status', 'approved')
+            ->where('is_trending', true)
+            ->with('user')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return response()->json($articles);
+    }
 }
+

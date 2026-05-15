@@ -92,6 +92,35 @@
     transform: translateY(-1px);
 }
 
+.btn-view-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-view-toggle.active {
+    background: #f97316;
+    color: #fff;
+    border-color: #f97316;
+}
+
+.btn-view-toggle:hover {
+    background: #e5e7eb;
+}
+
+.btn-view-toggle.active:hover {
+    background: #ea580c;
+}
+
 /* ---- Stats Grid ---- */
 .admin-stats-grid {
     display: grid;
@@ -236,6 +265,11 @@
     border-color: #f97316;
 }
 
+.btn-action.btn-reject:hover {
+    background: #fee;
+    border-color: #e74c3c;
+}
+
 /* ---- Pagination ---- */
 .admin-pagination {
     display: flex;
@@ -278,4 +312,61 @@
     width: 90%;
     max-height: 80vh;
     overflow-y: auto;
+}
+
+/* Container Modal Utama */
+.trending-modal {
+    max-width: 450px;
+    width: 90%;
+    border-radius: 12px;
+    padding: 24px;
+    background: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.modal-header h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.trending-article-title {
+    margin-top: 10px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Merapihkan Tombol Aksi */
+.trending-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.btn-action2 {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #ddd;
+    background: #ff3d00;
+}
+
+
+
+.active-trending {
+    background: linear-gradient(135deg, #ff7b00, #ff3d00);
+    color: white;
+    border: none;
+    height: 40px;
+    min-width: 160px; /* Menghindari teks terpotong */
+}
+
+.active-trending:hover {
+    background: linear-gradient(135deg, #ff9500, #ff4d00);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(255, 102, 0, 0.3);
 }

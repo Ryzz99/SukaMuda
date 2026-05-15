@@ -2,15 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logoSukaMuda from '../assets/logo.png';
-import { IoNotificationsSharp, IoCreateOutline, IoMenu, IoClose } from 'react-icons/io5'; 
+import { IoNotificationsSharp, IoCreateOutline, IoMenu, IoClose } from 'react-icons/io5';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const { isLoggedIn, logout, user } = useAuth(); 
+  const { isLoggedIn, logout, user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  
+
   const navigate = useNavigate();
   const sidebarRef = useRef();
   const navMenuRef = useRef();
@@ -35,7 +35,7 @@ const Navbar = () => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
         setIsSidebarOpen(false);
       }
-      
+
       if (navMenuRef.current && !navMenuRef.current.contains(event.target)) {
         setActiveDropdown(null);
       }
@@ -63,20 +63,20 @@ const Navbar = () => {
               <img src={logoSukaMuda} alt="SukaMuda" />
             </div>
           </div>
-          
+
           {/* --- SEARCH SECTION --- */}
           <div className="search-section">
             <div className="search-bar">
-              <span 
-                className="search-icon" 
+              <span
+                className="search-icon"
                 onClick={handleSearch}
                 style={{ cursor: 'pointer' }}
               >
                 🔍
               </span>
-              <input 
-                type="text" 
-                placeholder="Pencarian" 
+              <input
+                type="text"
+                placeholder="Pencarian"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleSearch}
@@ -87,13 +87,13 @@ const Navbar = () => {
           <div className="nav-actions">
             {isLoggedIn ? (
               <div className="logged-in-icons">
-                <IoNotificationsSharp 
-                  className="icon" 
-                  onClick={() => navigate('/notifications')} 
+                <IoNotificationsSharp
+                  className="icon"
+                  onClick={() => navigate('/notifications')}
                 />
-                <IoCreateOutline 
-                  className="icon" 
-                  onClick={() => navigate('/write')} 
+                <IoCreateOutline
+                  className="icon"
+                  onClick={() => navigate('/write')}
                 />
                 <IoMenu className="icon menu-btn" onClick={toggleSidebar} />
               </div>
@@ -109,8 +109,12 @@ const Navbar = () => {
         {/* --- NAVBAR BAWAH (Menu Kategori & Dropdown) --- */}
         <div className="navbar-bottom" ref={navMenuRef}>
           <ul className="nav-menu">
-            <li className="nav-item">
-              <div className="menu-header" onClick={() => toggleDropdown('news')}>
+            <li
+              className="nav-item"
+              onMouseEnter={() => setActiveDropdown('news')}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <div className="menu-header">
                 News <span className={`arrow ${activeDropdown === 'news' ? 'up' : 'down'}`}></span>
               </div>
               {activeDropdown === 'news' && (
@@ -122,8 +126,12 @@ const Navbar = () => {
               )}
             </li>
 
-            <li className="nav-item">
-              <div className="menu-header" onClick={() => toggleDropdown('lifestyle')}>
+            <li
+              className="nav-item"
+              onMouseEnter={() => setActiveDropdown('lifestyle')}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <div className="menu-header">
                 Lifestyle <span className={`arrow ${activeDropdown === 'lifestyle' ? 'up' : 'down'}`}></span>
               </div>
               {activeDropdown === 'lifestyle' && (
@@ -167,13 +175,13 @@ const Navbar = () => {
 
             <ul className="sidebar-menu-list">
               {isLoggedIn && user?.role === 'admin' && (
-                <li 
-                  onClick={() => { navigate('/admin'); toggleSidebar(); }} 
-                  style={{ 
-                    color: '#f97316', 
-                    fontWeight: 'bold', 
-                    borderLeft: '4px solid #f97316', 
-                    paddingLeft: '16px' 
+                <li
+                  onClick={() => { navigate('/admin'); toggleSidebar(); }}
+                  style={{
+                    color: '#f97316',
+                    fontWeight: 'bold',
+                    borderLeft: '4px solid #f97316',
+                    paddingLeft: '16px'
                   }}
                 >
                   Dashboard Admin

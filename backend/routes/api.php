@@ -6,6 +6,9 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController; 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DebugController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Middleware\CheckAdminRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,8 +20,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 // --- 1. PUBLIC ROUTES (Tanpa Login) ---
-Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/register', [RegisteredUserController::class, 'store']);
+
+// ===== DEBUG ROUTES (Untuk testing password) =====
+Route::post('/debug/test-password', [DebugController::class, 'testPassword']);
+Route::get('/debug/list-users', [DebugController::class, 'listUsers']);
+// ===== END DEBUG =====
 
 // Rate Limiting untuk OTP & Reset Password
 Route::middleware('throttle:5,60')->group(function () {
@@ -30,9 +38,11 @@ Route::middleware('throttle:5,60')->group(function () {
 
 // Konten Publik (Artikel)
 Route::get('/public-articles', [ArticleController::class, 'getPublicArticles']);
-Route::get('/trending-articles', [ArticleController::class, 'getTrendingArticles']);
+Route::get('/trending-articles', [ArticleController::class, 'trending']);
 Route::get('/articles/{id}/view', [ArticleController::class, 'incrementView']);
 Route::get('/articles/{id}/comments', [ArticleController::class, 'getComments']);
+Route::patch('/articles/{id}/toggle-trending', [ArticleController::class, 'toggleTrending']);
+Route::get('/users/{id}', [ProfileController::class, 'showPublic']);
 
 
 // --- 2. PROTECTED ROUTES (Wajib Login/Sanctum) ---
@@ -58,6 +68,15 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // --- SISTEM ARTIKEL (CRUD & INTERAKSI) ---
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [NotificationController::class, 'index']);
+        Route::get('/unread-count', [NotificationController::class, 'unreadCount']);
+        Route::patch('/{id}/read', [NotificationController::class, 'markAsRead']);
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+        Route::delete('/{id}', [NotificationController::class, 'destroy']);
+    });
+
+    // --- SISTEM ARTIKEL (CRUD & INTERAKSI) ---
     Route::get('/articles', [ArticleController::class, 'index']);           
     Route::post('/articles', [ArticleController::class, 'store']);          // Simpan artikel baru
     
@@ -72,9 +91,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/articles/{id}/comments', [ArticleController::class, 'storeComment']);
     Route::delete('/comments/{id}', [ArticleController::class, 'deleteComment']);
 
+    // Reports
+    Route::post('/reports', [ReportController::class, 'store']);
+
     // --- 3. AREA ADMIN ---
     Route::middleware(CheckAdminRole::class)->group(function () {
         // Update status approved/rejected/pending
         Route::patch('/articles/{id}/status', [ArticleController::class, 'updateStatus']); 
+        // Reports for admin
+        Route::get('/reports', [ReportController::class, 'index']);
     });
 });
