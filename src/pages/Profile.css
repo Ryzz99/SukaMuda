@@ -693,8 +693,14 @@ body {
   border-bottom: 1px solid var(--border);
 }
 .pp-banner {
-  height: 140px;
+  height: 250px;
+  width: 70%;
+  margin: 0 auto;        /* ← ini yang kurang */
+  border-radius: 12px;   /* opsional, biar lebih rapi */
   background: linear-gradient(135deg, #d4d4cc 0%, #c8c8be 100%);
+  border-bottom: 1px solid var(--border);
+  background-size: cover;
+  background-position: center;
 }
 .pp-info-row {
   max-width: 860px;
@@ -741,6 +747,19 @@ body {
   justify-content: center;
   cursor: pointer;
   box-shadow: var(--shadow);
+}
+.pp-cover-preview {
+  margin-top: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(17, 17, 17, .08);
+  max-width: 100%;
+}
+.pp-cover-preview img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  height: 120px;
 }
 .pp-meta {
   flex: 1;

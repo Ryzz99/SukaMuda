@@ -220,6 +220,70 @@ class ArticleController extends Controller
         return response()->json(['message' => 'Status berita berhasil diperbarui!', 'data' => $article]);
     }
 
+    public function trashIndex(Request $request)
+    {
+        $query = Article::onlyTrashed()->with('user');
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                try {
+                    $q->whereFullText('title', $search);
+                } catch (\Exception $e) {
+                    $q->where('title', 'LIKE', "%{$search}%");
+                }
+                $q->orWhereHas('user', function($u) use ($search) {
+                    $u->where('name', 'LIKE', "%{$search}%");
+                });
+            });
+        }
+
+        if ($request->has('category') && $request->category != 'all') {
+            $query->where('category', $request->category);
+        }
+
+        $articles = $query->latest()->paginate(15);
+        return response()->json($this->transformArticles($articles));
+    }
+
+    public function restore(Request $request, $id)
+    {
+        $article = Article::onlyTrashed()->findOrFail($id);
+        $user = $request->user();
+
+        if (!$user || $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $article->restore();
+        $article->status = 'pending';
+        $article->rejection_reason = null;
+        $article->save();
+
+        Cache::flush();
+
+        return response()->json(['message' => 'Artikel berhasil dipulihkan ke pending!', 'data' => $article]);
+    }
+
+    public function forceDelete(Request $request, $id)
+    {
+        $article = Article::onlyTrashed()->findOrFail($id);
+        $user = $request->user();
+
+        if (!$user || $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        if ($article->image) {
+            Storage::disk('public')->delete($article->image);
+        }
+
+        $article->forceDelete();
+        Cache::flush();
+
+        return response()->json(['message' => 'Artikel berhasil dihapus permanen dari sampah!']);
+    }
+
     // --- Sisanya Fungsi Like, Comment, dll (Tetap Sama) ---
     public function toggleLike(Request $request, $id)
     {
@@ -274,10 +338,9 @@ class ArticleController extends Controller
         if ($article->user_id !== $request->user()->id && $request->user()->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
-        if ($article->image) Storage::disk('public')->delete($article->image);
         $article->delete();
         Cache::flush();
-        return response()->json(['message' => 'Artikel berhasil dihapus!']);
+        return response()->json(['message' => 'Artikel berhasil dipindahkan ke sampah!']);
     }
     public function toggleTrending($id)
     {

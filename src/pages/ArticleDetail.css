@@ -279,12 +279,13 @@
 
 .image-caption-text {
   margin-top: 12px;
+  margin-bottom: 28px;
   font-size: 14px;
   color: #666;
   font-style: italic;
   text-align: center;
   line-height: 1.5;
-  max-width: 90%; /* Agar teks panjang tidak melebar sampai pinggir */
+  max-width: 90%;
 }
 
 .hero-img {
@@ -408,6 +409,43 @@
 .text-render h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.3px; }
 .text-render h3 { font-size: 20px; font-weight: 700; }
 
+/* ==================== IMAGE ALIGNMENT (QUILL) ==================== */
+/* Quill menggunakan class ql-align-*, bukan inline style */
+.text-render .ql-align-center {
+  text-align: center;
+}
+.text-render .ql-align-center img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.text-render .ql-align-right {
+  text-align: right;
+}
+.text-render .ql-align-right img {
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.text-render .ql-align-justify {
+  text-align: justify;
+}
+
+/* Fallback untuk inline style */
+.text-render p[style*="text-align: center"] img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.text-render p[style*="text-align: right"] img {
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* Base image */
 .text-render img {
   max-width: 100%;
   height: auto;
@@ -441,14 +479,14 @@
 
 /* Dropcap */
 .text-render p:first-of-type::first-letter {
-  font-size: 3.8em;
   float: left;
+  font-size: 4.2em;
   line-height: 0.78;
-  margin-right: 10px;
-  margin-top: 4px;
   font-weight: 700;
-  color: #000;
-  font-family: "Georgia", serif;
+  margin-right: 6px;
+  margin-top: 4px;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: inherit;
 }
 
 .text-render figure { margin: 28px 0; }
@@ -646,8 +684,8 @@
 .report-form-card {
   margin-top: 20px;
   padding: 18px;
-  border: 1px solid #111;       /* ← garis hitam */
-  background: #fff;             /* ← background putih */
+  border: 1px solid #111;
+  background: #fff;
   border-radius: 12px;
 }
 .report-form-card label {
@@ -661,12 +699,12 @@
   width: 100%;
   min-height: 120px;
   padding: 12px 14px;
-  border: 1px solid #111;       /* ← garis textarea hitam */
+  border: 1px solid #111;
   border-radius: 12px;
   font-family: inherit;
   font-size: 14px;
-  color: #111;                  /* ← tulisan hitam */
-  background: #fff;             /* ← background putih */
+  color: #111;
+  background: #fff;
   resize: vertical;
   margin-bottom: 14px;
   box-sizing: border-box;
@@ -700,12 +738,8 @@
   margin-top: 12px;
   font-size: 13px;
 }
-.report-feedback.success {
-  color: #166534;
-}
-.report-feedback.error {
-  color: #b91c1c;
-}
+.report-feedback.success { color: #166534; }
+.report-feedback.error { color: #b91c1c; }
 
 /* ==================== SIDEBAR KOMENTAR ==================== */
 .discussion-sidebar {
@@ -1029,7 +1063,6 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
-  /* Standar Kompatibilitas */
   box-orient: vertical;
   line-clamp: 3;
 }
@@ -1050,7 +1083,6 @@
   background-color: #ffffff;
 }
 
-/* Sidebar iklan - sama persis kayak home */
 .ad-sidebar {
   flex-shrink: 0;
   width: 160px;
@@ -1059,20 +1091,17 @@
 
 .ad-sidebar-sticky {
   position: sticky;
-  top: 80px; /* sesuaikan tinggi navbar */
+  top: 80px;
 }
 
-/* Iklan sebelum footer */
 .ad-before-footer {
   margin: 32px 16px 16px;
   background-color: #ffffff;
 }
 
-/* ===== FIX BACKGROUND ABU-ABU ===== */
 .article-container {
   background-color: #ffffff;
 }
-
 
 .load-more-wrapper {
   display: flex;
@@ -1100,6 +1129,7 @@
   font-size: 0.8rem;
   opacity: 0.75;
 }
+
 /* ==================== PRINT STYLES ==================== */
 @media print {
   .reading-progress-bar,
@@ -1152,20 +1182,20 @@
     padding-left: 16px;
   }
 
-.text-render {
-  font-size: 19px;
-  line-height: 1.9;
-  color: #1f1f1f;
-  word-break: break-word;
-}
+  .text-render {
+    font-size: 19px;
+    line-height: 1.9;
+    color: #1f1f1f;
+    word-break: break-word;
+  }
 
-.text-render p {
-  margin: 12px;
-}
+  .text-render p {
+    margin: 12px;
+  }
 
-.text-render p:last-child {
-  margin-bottom: 0;
-}
+  .text-render p:last-child {
+    margin-bottom: 0;
+  }
 
   .hero-img { max-height: 220px; }
 

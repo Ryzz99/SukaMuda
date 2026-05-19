@@ -29,7 +29,7 @@ const Profile = () => {
 
   const [userData, setUserData] = useState({
     name: '', email: '', bio: '', profession: 'Content Writer',
-    schoolName: '', interest: [], avatar: '',
+    schoolName: '', interest: [], avatar: '', coverPhoto: '',
   });
 
   const [posts, setPosts]                     = useState([]);
@@ -41,6 +41,8 @@ const Profile = () => {
   const [tempData, setTempData]   = useState(userData);
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
+  const [coverPhotoFile, setCoverPhotoFile] = useState(null);
+  const [coverPhotoPreview, setCoverPhotoPreview] = useState(null);
   const [saving, setSaving]       = useState(false);
 
   const [deleteTarget, setDeleteTarget] = useState({ id: null, type: null, title: '' });
@@ -82,6 +84,7 @@ const Profile = () => {
           schoolName: d.schoolName || '',
           interest:   Array.isArray(d.interests) ? d.interests : [],
           avatar:     d.avatar     || '',
+          coverPhoto: d.coverPhoto || '',
         });
 
         const safe = arr => Array.isArray(arr) ? arr : [];
@@ -112,6 +115,8 @@ const Profile = () => {
     setTempData(userData);
     setAvatarFile(null);
     setAvatarPreview(null);
+    setCoverPhotoFile(null);
+    setCoverPhotoPreview(null);
     setIsEditModalOpen(true);
   };
 
@@ -133,6 +138,16 @@ const Profile = () => {
     setAvatarPreview(URL.createObjectURL(file));
   };
 
+  const handleCoverPhotoChange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.type)) { alert('Format foto sampul tidak didukung. Gunakan JPG/PNG/WEBP.'); return; }
+    if (file.size > 5 * 1024 * 1024) { alert('Ukuran foto sampul maksimal 5 MB.'); return; }
+    setCoverPhotoFile(file);
+    setCoverPhotoPreview(URL.createObjectURL(file));
+  };
+
   const handleSaveProfile = async () => {
     if (!tempData.name?.trim()) { alert('Nama tidak boleh kosong.'); return; }
     setSaving(true);
@@ -147,6 +162,7 @@ const Profile = () => {
       (Array.isArray(tempData.interest) ? tempData.interest : [])
         .forEach(item => fd.append('interests[]', item));
       if (avatarFile) fd.append('avatarFile', avatarFile);
+      if (coverPhotoFile) fd.append('coverPhotoFile', coverPhotoFile);
 
       const res = await axios.post('/api/profile', fd);
       const sd  = res.data?.data;
@@ -159,6 +175,7 @@ const Profile = () => {
           schoolName: sd.schoolName || '',
           interest:   Array.isArray(sd.interests) ? sd.interests : [],
           avatar:     sd.avatar     || '',
+          coverPhoto: sd.coverPhoto || '',
         });
         if (refreshUser) await refreshUser();
       }
@@ -221,6 +238,7 @@ const Profile = () => {
   if (loading) return <div className="pp-loading">Memuat profil…</div>;
 
   const avatarBg = avatarPreview || userData.avatar;
+  const coverBg = coverPhotoPreview || userData.coverPhoto;
   const initials = userData.name?.charAt(0).toUpperCase() || '?';
 
   return (
@@ -228,7 +246,14 @@ const Profile = () => {
 
       {/* ── HEADER ── */}
       <div className="pp-header">
-        <div className="pp-banner" />
+        <div
+          className="pp-banner"
+          style={coverBg ? {
+            backgroundImage: `url(${coverBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          } : undefined}
+        />
         <div className="pp-info-row">
           <div className="pp-avatar-wrap">
             <div
@@ -378,7 +403,7 @@ const Profile = () => {
               </div>
               {['Pelajar'].includes(tempData.profession) && (
                 <div className="pp-field">
-                  <label className="pp-label">Asal Sekolah/Kampus</label>
+                  <label className="pp-label">Asal Sekolah</label>
                   <input className="pp-input" value={tempData.schoolName}
                     onChange={e => setTempData({ ...tempData, schoolName: e.target.value })}
                     placeholder="Nama sekolah" />
@@ -415,6 +440,24 @@ const Profile = () => {
                 {avatarFile && (
                   <small style={{ color: 'green', marginTop: 5, display: 'block' }}>
                     {avatarFile.name}
+                  </small>
+                )}
+              </div>
+              <div className="pp-field">
+                <label className="pp-label">Ganti Foto Sampul</label>
+                <input type="file" className="pp-input" accept="image/jpeg,image/png,image/webp"
+                  onChange={handleCoverPhotoChange} />
+                {(coverPhotoFile || coverPhotoPreview || userData.coverPhoto) && (
+                  <div className="pp-cover-preview">
+                    <img
+                      src={coverPhotoPreview || userData.coverPhoto}
+                      alt="Preview foto sampul"
+                    />
+                  </div>
+                )}
+                {coverPhotoFile && (
+                  <small style={{ color: 'green', marginTop: 5, display: 'block' }}>
+                    {coverPhotoFile.name}
                   </small>
                 )}
               </div>

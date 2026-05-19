@@ -23,9 +23,18 @@ const AdminDashboard = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    const [activeView, setActiveView] = useState('articles'); // 'articles' or 'reports'
+    const [activeView, setActiveView] = useState('articles'); // 'articles', 'reports', or 'trash'
     const [reports, setReports] = useState([]);
     const [reportsLoading, setReportsLoading] = useState(false);
+    const [trash, setTrash] = useState([]);
+    const [trashLoading, setTrashLoading] = useState(false);
+    const [confirmModal, setConfirmModal] = useState({
+        isOpen: false,
+        type: '',
+        article: null,
+        title: '',
+        description: ''
+    });
 
     // Rejection modal state
     const [rejectionModal, setRejectionModal] = useState({
@@ -106,12 +115,40 @@ const AdminDashboard = () => {
         }
     };
 
+    const fetchTrash = async (isSearch = false) => {
+        setTrashLoading(true);
+        try {
+            const response = await axios.get('/api/articles/trash', {
+                params: {
+                    page: currentPage,
+                    category: filterCategory !== 'all' ? filterCategory : null,
+                    search: searchQuery
+                }
+            });
+            setTrash(response.data.data || []);
+
+            if (response.data.last_page) {
+                setTotalPages(response.data.last_page);
+            }
+        } catch (error) {
+            console.error("Gagal mengambil data sampah artikel:", error);
+        } finally {
+            setTrashLoading(false);
+        }
+    };
+
     // Untuk ganti halaman & filter dropdown (boleh ada loading singkat)
     useEffect(() => {
         if (isLoggedIn && user?.role === 'admin') {
-            fetchArticles(false);
+            if (activeView === 'trash') {
+                fetchTrash();
+            } else if (activeView === 'reports') {
+                // no pagination for reports currently
+            } else {
+                fetchArticles(false);
+            }
         }
-    }, [currentPage, filterStatus, filterCategory]);
+    }, [currentPage, filterStatus, filterCategory, activeView]);
 
     // KHUSUS UNTUK SEARCH: Anti scroll ke atas saat mengetik
     useEffect(() => {
@@ -121,7 +158,9 @@ const AdminDashboard = () => {
                 const scrollY = window.scrollY;
 
                 setCurrentPage(1);
-                fetchArticles(true).then(() => {
+                const fetcher = activeView === 'trash' ? fetchTrash : fetchArticles;
+
+                fetcher(true).then(() => {
                     // Kembalikan posisi scroll setelah data selesai di-fetch
                     window.scrollTo(0, scrollY);
                 });
@@ -186,20 +225,80 @@ const AdminDashboard = () => {
         setRejectionModal({ isOpen: false, articleId: null, articleTitle: null, isLoading: false });
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('Hapus berita ini secara permanen?')) return;
+    const openConfirmModal = (type, article) => {
+        const titleMap = {
+            trash: 'Pindahkan ke sampah?',
+            restore: 'Pulihkan artikel?',
+            permanent: 'Hapus permanen dari sampah?'
+        };
 
+        const descriptionMap = {
+            trash: 'Artikel akan dipindahkan ke sampah dan bisa dipulihkan kembali nanti.',
+            restore: 'Artikel akan dikembalikan ke status pending dan dikeluarkan dari sampah.',
+            permanent: 'Artikel akan dihapus secara permanen dan tidak bisa dikembalikan.'
+        };
+
+        setConfirmModal({
+            isOpen: true,
+            type,
+            article,
+            title: titleMap[type],
+            description: descriptionMap[type]
+        });
+    };
+
+    const closeConfirmModal = () => {
+        setConfirmModal({ isOpen: false, type: '', article: null, title: '', description: '' });
+    };
+
+    const confirmModalAction = async () => {
+        if (!confirmModal.article) return;
+
+        const id = confirmModal.article.id;
         setActionLoading(id);
+
         try {
-            await axios.delete(`/api/articles/${id}`);
-            alert("Berita berhasil dihapus!");
-            fetchArticles();
+            if (confirmModal.type === 'trash') {
+                await axios.delete(`/api/articles/${id}`);
+                if (activeView === 'trash') {
+                    fetchTrash();
+                } else if (activeView === 'reports') {
+                    fetchReports();
+                } else {
+                    fetchArticles();
+                }
+                alert('Berita berhasil dipindahkan ke sampah!');
+            }
+            if (confirmModal.type === 'restore') {
+                await axios.patch(`/api/articles/${id}/restore`);
+                alert('Berita berhasil dikembalikan ke pending!');
+                if (activeView === 'trash') {
+                    fetchTrash();
+                } else if (activeView === 'reports') {
+                    fetchReports();
+                } else {
+                    fetchArticles();
+                }
+            }
+            if (confirmModal.type === 'permanent') {
+                await axios.delete(`/api/articles/${id}/permanent`);
+                alert('Berita berhasil dihapus permanen dari sampah!');
+                fetchTrash();
+            }
+
             queryClient.invalidateQueries(['trendingArticles']);
             queryClient.invalidateQueries(['publicArticles']);
         } catch (error) {
-            alert("Gagal menghapus berita.");
+            if (confirmModal.type === 'trash') {
+                alert('Gagal memindahkan berita ke sampah.');
+            } else if (confirmModal.type === 'restore') {
+                alert('Gagal memulihkan berita dari sampah.');
+            } else if (confirmModal.type === 'permanent') {
+                alert('Gagal menghapus artikel secara permanen.');
+            }
         } finally {
             setActionLoading(null);
+            closeConfirmModal();
         }
     };
 
@@ -263,15 +362,21 @@ const AdminDashboard = () => {
                 <div className="admin-header-right">
                     <button 
                         className={`btn-view-toggle ${activeView === 'articles' ? 'active' : ''}`}
-                        onClick={() => setActiveView('articles')}
+                        onClick={() => { setActiveView('articles'); setCurrentPage(1); }}
                     >
                         Artikel
                     </button>
                     <button 
                         className={`btn-view-toggle ${activeView === 'reports' ? 'active' : ''}`}
-                        onClick={() => setActiveView('reports')}
+                        onClick={() => { setActiveView('reports'); setCurrentPage(1); }}
                     >
                         Laporan ({reports.length})
+                    </button>
+                    <button 
+                        className={`btn-view-toggle ${activeView === 'trash' ? 'active' : ''}`}
+                        onClick={() => { setActiveView('trash'); setCurrentPage(1); }}
+                    >
+                        Sampah ({trash.length})
                     </button>
                     <Link to="/write" className="btn-create-new">
                         Tulis Artikel Baru
@@ -319,7 +424,7 @@ const AdminDashboard = () => {
                 </div>
             )}
 
-            {activeView === 'articles' ? (
+            {activeView === 'articles' && (
                 <div className="admin-table-wrapper">
                     <table className="admin-table">
                         <thead>
@@ -349,7 +454,6 @@ const AdminDashboard = () => {
                                     <td><span className={`status-badge status-${art.status}`}>{art.status.toUpperCase()}</span></td>
                                     <td>
                                         <div className="action-group">
-
                                             <button className="btn-action" onClick={() => setPreviewArticle(art)} title="Preview">👁️</button>
                                             <button
                                                 className="btn-action"
@@ -364,7 +468,10 @@ const AdminDashboard = () => {
                                                     <button className="btn-action btn-reject" onClick={() => handleRejectArticle(art.id, art.title)} disabled={actionLoading === art.id} title="Reject">❌</button>
                                                 </>
                                             )}
-                                            <button className="btn-action" onClick={() => handleDelete(art.id)} disabled={actionLoading === art.id} title="Hapus">🗑️</button>
+                                            {art.status === 'approved' && (
+                                                <button className="btn-action" onClick={() => handleUpdateStatus(art.id, 'pending')} disabled={actionLoading === art.id} title="Tarik ke Pending">↩️</button>
+                                            )}
+                                            <button className="btn-action" onClick={() => handleMoveToTrash(art.id)} disabled={actionLoading === art.id} title="Pindahkan ke Sampah">🗑️</button>
                                             <button
                                                 className={`btn-action ${art.is_trending ? 'active-trending' : ''}`}
                                                 onClick={() => openTrendingConfirm(art)}
@@ -383,7 +490,9 @@ const AdminDashboard = () => {
                         </tbody>
                     </table>
                 </div>
-            ) : (
+            )}
+
+            {activeView === 'reports' && (
                 <div className="admin-table-wrapper">
                     <table className="admin-table">
                         <thead>
@@ -419,13 +528,63 @@ const AdminDashboard = () => {
                                     <td>
                                         <div className="action-group">
                                             <button className="btn-action" onClick={() => setPreviewArticle(report.article)} title="Lihat Artikel">👁️</button>
-                                            <button className="btn-action" onClick={() => handleDelete(report.article.id)} disabled={actionLoading === report.article.id} title="Hapus Artikel">🗑️</button>
+                                            <button className="btn-action" onClick={() => handleMoveToTrash(report.article.id)} disabled={actionLoading === report.article.id} title="Pindahkan artikel ke sampah">🗑️</button>
                                         </div>
                                     </td>
                                 </tr>
                             )) : (
                                 <tr>
                                     <td colSpan="6" className="empty-state">Belum ada laporan.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+            {activeView === 'trash' && (
+                <div className="admin-table-wrapper">
+                    <table className="admin-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Artikel</th>
+                                <th>Penulis</th>
+                                <th>Kategori</th>
+                                <th>Dihapus</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {trashLoading ? (
+                                <tr>
+                                    <td colSpan="6" className="empty-state">Memuat sampah...</td>
+                                </tr>
+                            ) : trash.length > 0 ? trash.map((art, index) => (
+                                <tr key={art.id}>
+                                    <td>{index + 1 + (currentPage - 1) * 15}</td>
+                                    <td>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <img src={getArticleImage(art)} alt="" style={{ width: '40px', height: '30px', borderRadius: '4px', objectFit: 'cover' }} />
+                                            <span style={{ fontWeight: '600' }}>{art.title}</span>
+                                        </div>
+                                    </td>
+                                    <td>{art.user?.name || 'Anonim'}</td>
+                                    <td>
+                                        <span className="badge-category">{getCategoryLabel(art.category)}</span>
+                                    </td>
+                                    <td>{new Date(art.deleted_at).toLocaleDateString('id-ID')}</td>
+                                    <td>
+                                        <div className="action-group">
+                                            <button className="btn-action" onClick={() => setPreviewArticle(art)} title="Preview">👁️</button>
+                                            <button className="btn-action" onClick={() => openConfirmModal('restore', art)} disabled={actionLoading === art.id} title="Restore">↩️</button>
+                                            <button className="btn-action btn-reject" onClick={() => openConfirmModal('permanent', art)} disabled={actionLoading === art.id} title="Hapus Permanen">❌</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )) : (
+                                <tr>
+                                    <td colSpan="6" className="empty-state">Sampah kosong.</td>
                                 </tr>
                             )}
                         </tbody>
@@ -494,6 +653,36 @@ const AdminDashboard = () => {
                                     {trendingTarget.is_trending
                                         ? 'Hapus dari Trending'
                                         : 'Tampilkan di Trending'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {confirmModal.isOpen && (
+                <div className="modal-overlay" onClick={closeConfirmModal}>
+                    <div className="modal-content trending-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>{confirmModal.title}</h3>
+                        </div>
+                        <div className="modal-body">
+                            <p>{confirmModal.description}</p>
+                            <p><strong>{confirmModal.article?.title}</strong></p>
+                            <div className="trending-modal-actions">
+                                <button className="btn-action2" onClick={closeConfirmModal}>
+                                    Batal
+                                </button>
+                                <button
+                                    className="btn-action btn-reject"
+                                    onClick={confirmModalAction}
+                                    disabled={actionLoading === confirmModal.article?.id}
+                                >
+                                    {confirmModal.type === 'permanent'
+                                        ? 'Hapus Permanen'
+                                        : confirmModal.type === 'restore'
+                                            ? 'Pulihkan'
+                                            : 'Lanjutkan'}
                                 </button>
                             </div>
                         </div>

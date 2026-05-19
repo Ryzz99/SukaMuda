@@ -85,7 +85,7 @@
   box-shadow: 0 0 0 3px rgba(30, 118, 208, 0.1);
 }
 
-/* ================= DROPDOWN CATEGORY (FIX PANAH & KUNING) ================= */
+/* ================= DROPDOWN CATEGORY ================= */
 .form-select {
   max-width: 240px;
   height: 46px;
@@ -96,14 +96,10 @@
   padding: 0 16px;
   font-size: 15px;
   cursor: pointer;
-  
-  /* Mengembalikan panah dropdown bawaan sistem */
   -webkit-appearance: menulist;
   -moz-appearance: menulist;
   appearance: menulist;
-  
-  /* Mencegah warna kuning/electro bawaan browser saat list dibuka */
-  color-scheme: light; 
+  color-scheme: light;
 }
 
 .form-select:focus {
@@ -112,7 +108,6 @@
   outline: none;
 }
 
-/* Memastikan list pilihan tetap bersih putih */
 .form-select option {
   background-color: #ffffff !important;
   color: #111111 !important;
@@ -182,7 +177,7 @@ input[type="file"].form-input:focus {
 
 .editor-body {
   background: white;
-  min-height: 280px; 
+  min-height: 280px;
 }
 
 .menulis-form-page .ql-toolbar.ql-snow {
@@ -231,6 +226,26 @@ input[type="file"].form-input:focus {
   padding: 0 8px !important;
 }
 
+/* ================= ALIGNMENT GAMBAR DI EDITOR ================= */
+/* Supaya posisi gambar keliatan benar saat nulis di Quill */
+.menulis-form-page .ql-editor .ql-align-center {
+  text-align: center;
+}
+.menulis-form-page .ql-editor .ql-align-center img {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.menulis-form-page .ql-editor .ql-align-right {
+  text-align: right;
+}
+.menulis-form-page .ql-editor .ql-align-right img {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: 0;
+}
+
 /* ================= ACTION BUTTONS ================= */
 .form-actions {
   display: flex;
@@ -276,7 +291,6 @@ input[type="file"].form-input:focus {
   box-shadow: 0 4px 8px rgba(30, 118, 208, 0.3);
 }
 
-/* Container pembungkus link (Video & Audio) */
 .form-input-icon {
   display: flex;
   align-items: center;
@@ -391,13 +405,89 @@ input[type="file"].form-input:focus {
   background: #1662ad;
 }
 
+/* ================= THUMBNAIL UPLOAD ================= */
+.hidden-file-input {
+  display: none;
+}
+
+.thumbnail-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  min-height: 85px;
+}
+
+.thumbnail-drop-mini {
+  width: 130px;
+  height: 85px;
+  border: 2px dashed #cfcfcf;
+  border-radius: 12px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-sizing: border-box;
+}
+
+.thumbnail-preview-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 130px;
+  height: 85px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  z-index: 2;
+}
+
+.thumbnail-preview-mini {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.remove-thumbnail-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 2px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  z-index: 3;
+  transform: none;
+}
+
+.remove-thumbnail-btn:hover {
+  background: rgba(255, 0, 0, 0.8);
+}
+
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
-  .menulis-form-page .content { 
-    padding: 30px 16px 60px; 
+  .menulis-form-page .content {
+    padding: 30px 16px 60px;
   }
-  
-  .form-row { 
+
+  .form-row {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
   }
@@ -405,9 +495,9 @@ input[type="file"].form-input:focus {
   .form-label {
     font-size: 14px;
   }
-  
-  .form-select { 
-    max-width: 100%; 
+
+  .form-select {
+    max-width: 100%;
   }
 
   .thumbnail-input {
@@ -431,98 +521,6 @@ input[type="file"].form-input:focus {
   }
 }
 
-.hidden-file-input {
-  display: none;
-}
-
-/* Container baris thumbnail */
-.thumbnail-upload-row {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  position: relative; /* Penting untuk tumpukan */
-  min-height: 85px;
-}
-
-/* Tombol Pilih File (Kotak Dashed) */
-.thumbnail-drop-mini {
-  width: 130px; /* Samakan dengan preview */
-  height: 85px; /* Samakan dengan preview */
-  border: 2px dashed #cfcfcf;
-  border-radius: 12px;
-  background: #fafafa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.25s ease;
-  box-sizing: border-box;
-}
-
-/* Kotak Preview yang Menimpa */
-.thumbnail-preview-box {
-  position: absolute; /* Membuatnya menimpa tombol di bawahnya */
-  top: 0;
-  left: 0;
-  width: 130px;
-  height: 85px;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #ddd;
-  z-index: 2; /* Di atas tombol Choose File */
-}
-
-.thumbnail-preview-mini {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Tombol X Bulat Sempurna di Tengah */
-/* Tombol X Bulat Sempurna di Pojok Kanan Atas */
-.remove-thumbnail-btn {
-  position: absolute;
-  top: 6px; 
-  right: 6px;
-  
-  width: 28px;  
-  height: 28px; 
-  
-  border: none;
-  border-radius: 50%; 
-  
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  
-  /* Ukuran 20px - 22px paling pas untuk bulatan 28px */
-  font-size: 20px; 
-  font-weight: bold;
-  
-  /* Reset line-height agar tidak ada jarak antar baris yang mendorong teks ke bawah */
-  line-height: 0; 
-  
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  /* Tambahkan padding-bottom 2px atau 3px JIKA karakter × bawaan font-mu 
-     masih terlihat agak turun (opsional, tergantung font keluarga) */
-  padding-bottom: 2px; 
-  
-  cursor: pointer;
-  transition: 0.2s ease;
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 0;
-  z-index: 3;
-  transform: none; 
-}
-
-.remove-thumbnail-btn:hover {
-  background: rgba(255, 0, 0, 0.8);
-}
-/* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   .menulis-form-page .content {
     padding: 20px 16px 80px;

@@ -10,6 +10,18 @@ const getInitials = (name) => {
   return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
 };
 
+const normalizeCategory = (value) => (value || '').toString().toLowerCase().replace(/[^a-z0-9]+/g, '');
+
+const slugCategoryMap = {
+  sport: ['sport', 'sport & e-sport', 'sport-esport', 'sport e-sport'],
+  music: ['music', 'music & film', 'music&film', 'music and film'],
+};
+
+const displayLabelMap = {
+  sport: 'Sport & E-Sport',
+  music: 'Music & Film',
+};
+
 const Category = () => {
   const { slug } = useParams();
   const [articles, setArticles] = useState([]);
@@ -21,8 +33,14 @@ const Category = () => {
         setLoading(true);
         const response = await axios.get('/api/public-articles');
 
+        const acceptedCategoryNormals = (slugCategoryMap[slug]
+          ? slugCategoryMap[slug]
+          : [slug]
+        ).map(normalizeCategory);
+
         const filtered = response.data.filter((item) => {
-          return item.category.toLowerCase() === slug.toLowerCase();
+          const catNorm = normalizeCategory(item.category);
+          return acceptedCategoryNormals.includes(catNorm);
         });
 
         setArticles(filtered);
@@ -40,12 +58,12 @@ const Category = () => {
     <div className="category-container">
       <header className="category-header">
         <h2 style={{ textTransform: 'capitalize', color: '#000', marginBottom: '30px' }}>
-          Kategori: {slug}
+          Kategori: {displayLabelMap[slug] || slug}
         </h2>
       </header>
 
       {loading ? (
-        <div className="category-empty">Memuat Berita {slug}...</div>
+        <div className="category-empty">Memuat Berita {displayLabelMap[slug] || slug}...</div>
       ) : (
         <div className="article-grid">
           {articles.length > 0 ? (
@@ -110,7 +128,7 @@ const Category = () => {
             })
           ) : (
             <div className="category-empty">
-              <p>Belum ada artikel di kategori <strong>{slug}</strong>.</p>
+              <p>Belum ada artikel di kategori <strong>{displayLabelMap[slug] || slug}</strong>.</p>
             </div>
           )}
         </div>

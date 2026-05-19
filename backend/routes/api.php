@@ -98,6 +98,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(CheckAdminRole::class)->group(function () {
         // Update status approved/rejected/pending
         Route::patch('/articles/{id}/status', [ArticleController::class, 'updateStatus']); 
+        Route::get('/articles/trash', [ArticleController::class, 'trashIndex']);
+        Route::patch('/articles/{id}/restore', [ArticleController::class, 'restore']);
+        Route::delete('/articles/{id}/permanent', [ArticleController::class, 'forceDelete']);
         // Reports for admin
         Route::get('/reports', [ReportController::class, 'index']);
     });

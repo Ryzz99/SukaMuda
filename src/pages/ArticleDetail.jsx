@@ -27,6 +27,41 @@ const getVisibleHtml = (html, count) => {
 
 const getTotalParagraphs = (html) => splitHtmlByParagraph(html).length;
 
+const getSpotifyEmbedUrl = (url) => {
+  if (!url) return '';
+  try {
+    const parsed = new URL(url);
+    if (!parsed.hostname.includes('spotify.com')) return url;
+    const parts = parsed.pathname.split('/').filter(Boolean);
+    if (parts.length >= 2) {
+      return `https://open.spotify.com/embed/${parts[0]}/${parts[1]}`;
+    }
+    return url;
+  } catch {
+    return url;
+  }
+};
+
+const getYoutubeEmbedUrl = (url) => {
+  if (!url) return '';
+  try {
+    const parsed = new URL(url);
+    let videoId = '';
+    if (parsed.hostname.includes('youtu.be')) {
+      videoId = parsed.pathname.slice(1);
+    } else if (parsed.pathname.includes('/watch')) {
+      videoId = parsed.searchParams.get('v');
+    } else if (parsed.pathname.startsWith('/embed/')) {
+      videoId = parsed.pathname.split('/embed/')[1];
+    } else if (parsed.pathname.startsWith('/shorts/')) {
+      videoId = parsed.pathname.split('/shorts/')[1];
+    }
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+  } catch {
+    return url;
+  }
+};
+
 const ArticleDetail = () => {
   const { id } = useParams();
   const { isLoggedIn, user } = useAuth();
@@ -213,6 +248,10 @@ const ArticleDetail = () => {
     .filter((item) => item.category === article.category && String(item.id) !== String(id))
     .slice(0, 3);
 
+  const spotifyEmbedUrl = article.audio_link ? getSpotifyEmbedUrl(article.audio_link) : '';
+  const youtubeEmbedUrl = article.video_link ? getYoutubeEmbedUrl(article.video_link) : '';
+  const showPodcastEmbed = article.category === 'podcast' && (spotifyEmbedUrl || youtubeEmbedUrl);
+
   const imageUrl = article.image
     ? article.image.startsWith("http") ? article.image : `${baseUrl}/storage/${article.image}`
     : "http://via.placeholder.com/1200x600";
@@ -359,6 +398,36 @@ const ArticleDetail = () => {
                 <p className="image-caption-text">{article.image_caption || article.thumbnailCaption}</p>
               )}
 
+              {showPodcastEmbed && (
+                <div className="podcast-embed-section" style={{ marginBottom: '24px' }}>
+                  {spotifyEmbedUrl && (
+                    <div className="podcast-embed podcast-audio" style={{ marginBottom: '24px' }}>
+                      <iframe
+                        src={spotifyEmbedUrl}
+                        width="100%"
+                        height="232"
+                        frameBorder="0"
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy"
+                      ></iframe>
+                    </div>
+                  )}
+                  {youtubeEmbedUrl && (
+                    <div className="podcast-embed podcast-video">
+                      <iframe
+                        src={youtubeEmbedUrl}
+                        width="100%"
+                        height="360"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        loading="lazy"
+                      ></iframe>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <article className="content-body" ref={contentRef}>
                 {isDraft && (
                   <div className="draft-banner">
@@ -414,12 +483,6 @@ const ArticleDetail = () => {
                           <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                         </svg>
                         <span>{likeCount > 0 ? likeCount : "Suka"}</span>
-                      </button>
-                      <button className={`bookmark-btn ${isBookmarked ? "active" : ""}`} onClick={handleBookmark}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill={isBookmarked ? "#f59e0b" : "none"} stroke={isBookmarked ? "#f59e0b" : "#666"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                        </svg>
-                        <span>{isBookmarked ? "Tersimpan" : "Simpan"}</span>
                       </button>
                       <button className="report-btn" onClick={() => setShowReportForm((prev) => !prev)}>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -281,7 +281,7 @@
 
 .page-btn {
     padding: 8px 16px;
-    background: #fff;
+    background: #000;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     font-weight: 600;
@@ -353,7 +353,11 @@
     border: 1px solid #ddd;
     background: #ff3d00;
 }
-
+.trending-modal-actions .btn-action.btn-reject {
+    background: #ff3d00;
+    color: white;
+    border-color: #ef4444;
+}
 
 
 .active-trending {

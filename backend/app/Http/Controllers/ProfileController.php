@@ -42,6 +42,7 @@ class ProfileController extends Controller
                 'schoolName' => $user->school_name ?? '',
                 'interests' => is_array($user->interests) ? $user->interests : [],
                 'avatar' => $user->avatar ? asset('storage/' . $user->avatar) : null,
+                'coverPhoto' => $user->cover_photo ? asset('storage/' . $user->cover_photo) : null,
                 
                 // List Artikel
                 'posts' => $this->formatArticles($posts),
@@ -76,6 +77,7 @@ class ProfileController extends Controller
                 'schoolName' => 'nullable|string|max:100',
                 'interests' => 'nullable|array',
                 'avatarFile' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'coverPhotoFile' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             ]);
 
             $user = $request->user();
@@ -99,6 +101,14 @@ class ProfileController extends Controller
                 }
                 $path = $request->file('avatarFile')->store('avatars', 'public');
                 $user->avatar = $path;
+            }
+
+            if ($request->hasFile('coverPhotoFile')) {
+                if ($user->cover_photo) {
+                    Storage::disk('public')->delete($user->cover_photo);
+                }
+                $path = $request->file('coverPhotoFile')->store('cover_photos', 'public');
+                $user->cover_photo = $path;
             }
 
             $user->save();
@@ -177,6 +187,7 @@ class ProfileController extends Controller
                     'profession' => $user->profession ?? '',
                     'schoolName' => $user->school_name ?? '',
                     'avatar' => $user->avatar ? (filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : asset('storage/' . $user->avatar)) : null,
+                    'coverPhoto' => $user->cover_photo ? (filter_var($user->cover_photo, FILTER_VALIDATE_URL) ? $user->cover_photo : asset('storage/' . $user->cover_photo)) : null,
                     'articles' => $this->formatArticles($articles),
                 ],
             ]);
